@@ -1,0 +1,42 @@
+{
+  "name": "renawre",
+  "version": "0.0.1",
+  "description": "A disordered collection of natural language processing research scripts based on ewpss.",
+  "main": "lib/index.js",
+  "scripts": {
+    "prepublish": "npm run lint && npm run buildlib",
+    "buildlib": "babel -d lib src/",
+    "lint": "npm run lintone src test",
+    "lintone": "eslint --fix --color --ext es6"
+  },
+  "engines": {
+    "node": "~5.5.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mettatw/renawre"
+  },
+  "keywords": [
+    "shellscript",
+    "template"
+  ],
+  "babel": {
+    "presets": [
+      "es2015",
+      "stage-0"
+    ]
+  },
+  "author": "mettatw",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "babel-cli": "^6.4.5",
+    "babel-core": "^6.4.5",
+    "babel-eslint": "^4.1.6",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-stage-0": "^6.3.13",
+    "eslint": "^1.10.3"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.3.14"
+  }
+}
