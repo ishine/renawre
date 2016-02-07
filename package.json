@@ -7,7 +7,8 @@
     "prepublish": "npm run lint && npm run buildlib",
     "buildlib": "babel -d lib src/",
     "lint": "npm run lintone src test",
-    "lintone": "eslint --fix --color --ext es6"
+    "lintone": "eslint --fix --color --ext es6",
+    "build": "gulp"
   },
   "engines": {
     "node": "~5.5.0"
@@ -34,9 +35,12 @@
     "babel-eslint": "^4.1.6",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-stage-0": "^6.3.13",
-    "eslint": "^1.10.3"
+    "eslint": "^1.10.3",
+    "gulp": "^3.9.0",
+    "gulp-cli": "^1.2.0"
   },
   "dependencies": {
-    "babel-polyfill": "^6.3.14"
+    "babel-polyfill": "^6.3.14",
+    "bluebird": "^3.2.2"
   }
 }
