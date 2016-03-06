@@ -9,15 +9,18 @@ import * as ewpss from 'ewpss';
 let objEwpss;
 
 function registerTasks() {
-  gulp.task('initialize', taskInitialize);
-  gulp.task('steps', ['initialize'], makeScriptFunc('srcsteps/**/*.sh', 'renawre'));
   gulp.task('default', ['steps']);
+  gulp.task('steps', ['initialize', 'stepsMacro'],
+    makeEwpssFunc('tmp/steps/**/*.sh', 'renawre', 'getVinylTemplater'));
+  gulp.task('stepsMacro', ['initialize'],
+    makeEwpssFunc('srcsteps/**/*.sh', 'tmp/steps', 'getVinylMacroer'));
+  gulp.task('initialize', taskInitialize);
 }
 
-function makeScriptFunc(src, dest) {
+function makeEwpssFunc(src, dest, getterName) {
   return () => {
     return gulp.src(src)
-      .pipe(objEwpss.getVinylTransform())
+      .pipe(objEwpss[getterName]())
       .pipe(gulp.dest(dest));
   };
 }
