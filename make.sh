@@ -42,6 +42,7 @@ function buildall {
 
     # Do the build!
     buildone "$src" "$dest"
+    chmod 755 "$dest"
   done
   #buildone src/test/test1.sh dist/test/test1.sh
   shopt -u globstar
