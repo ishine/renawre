@@ -27,6 +27,8 @@ elif [[ -f "$HOME/probable-octo-guacamole/env.sh" ]]; then
   POG_PARENTROOT="$HOME/probable-octo-guacamole"
 fi
 
+export POG_VERSIONINFO__RENAWRE="$(git --git-dir="${_thisroot}/.git" describe --tags --long 2>/dev/null || echo unknown)"
+
 if [[ -f "$_thisroot/local.sh" ]]; then
   source "$_thisroot/local.sh"
 fi
@@ -34,3 +36,4 @@ fi
 source "$POG_PARENTROOT/env.sh"
 
 export POG_ROOTLIST="$_thisroot:$POG_ROOTLIST"
+
