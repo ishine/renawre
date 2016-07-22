@@ -33,4 +33,4 @@ fi
 
 source "$POG_PARENTROOT/env.sh"
 
-POG_ROOTLIST+=("$_thisroot")
+export POG_ROOTLIST+=":$_thisroot"
