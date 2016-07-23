@@ -16,13 +16,13 @@
 #  limitations under the License.
 #***************************************************************************
 
-xxx=yy !!data:i
+xxx=yy !!data:i:h:opt
 xxx2=1556
 xxx3=()
 
-in= !!data:i:r:v # This is one
-in2=() !!data:i:r:v # This is two
-out= !!data:o:r:v
+in= !!data:i # This is one
+in2=() !!data:i # This is two
+out= !!data:o
 
 pog-begin-script
 
