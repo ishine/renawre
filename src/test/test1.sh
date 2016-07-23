@@ -16,7 +16,6 @@
 #  limitations under the License.
 #***************************************************************************
 
-
 xxx=yy !!data:i
 xxx2=1556
 xxx3=()
@@ -25,7 +24,6 @@ in= !!data:i:r:v # This is one
 in2=() !!data:i:r:v # This is two
 out= !!data:o:r:v
 
-!!source pogbase/parseopts.sh
 pog-begin-script
 
 thresholdPath "aaa/ccc/ddd/eee/fff/ggg" 13
