@@ -16,16 +16,22 @@
 #  limitations under the License.
 #***************************************************************************
 
-pog-begin-script
 
 xxx=yy !!data:i
 xxx2=1556
 xxx3=()
 
-input='' !!data:i:r # This is one
-output=() !!data:o:r
+in= !!data:i:r:v # This is one
+in2=() !!data:i:r:v # This is two
+out= !!data:o:r:v
 
 !!source pogbase/parseopts.sh
+pog-begin-script
+
+thresholdPath "aaa/ccc/ddd/eee/fff/ggg" 13
+echo
+thresholdPath "zzz/aaacccdddeeefffggg" 13
+echo
 
 sleep 2
 echo 1556
