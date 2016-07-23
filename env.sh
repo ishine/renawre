@@ -22,18 +22,17 @@ _thisroot="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
 # Attempt to find POG, based on where I usually put my file
 if [[ -f "$_thisroot/../probable-octo-guacamole/env.sh" ]]; then
-  POG_PARENTROOT="$_thisroot/../probable-octo-guacamole"
+  POGB_PARENTROOT="$_thisroot/../probable-octo-guacamole"
 elif [[ -f "$HOME/probable-octo-guacamole/env.sh" ]]; then
-  POG_PARENTROOT="$HOME/probable-octo-guacamole"
+  POGB_PARENTROOT="$HOME/probable-octo-guacamole"
 fi
 
-export POG_VERSIONINFO__RENAWRE="$(git --git-dir="${_thisroot}/.git" describe --tags --long 2>/dev/null || echo unknown)"
+export POGB_VERSIONINFO__RENAWRE="$(git --git-dir="${_thisroot}/.git" describe --tags --long 2>/dev/null || echo unknown)"
 
 if [[ -f "$_thisroot/local.sh" ]]; then
   source "$_thisroot/local.sh"
 fi
 
-source "$POG_PARENTROOT/env.sh"
+source "$POGB_PARENTROOT/env.sh"
 
-export POG_ROOTLIST="$_thisroot:$POG_ROOTLIST"
-
+export POGB_ROOTLIST="$_thisroot:$POGB_ROOTLIST"

@@ -26,9 +26,9 @@ function buildone {
 
   # Incase result is too old, rebuild it
   if [[ ! -f "$dest" || "$src" -nt "$dest"
-      || "$POG_POGSOURCE/build.sh" -nt "$dest" ]]; then
+      || "$POGB_POGSOURCE/build.sh" -nt "$dest" ]]; then
     mkdir -p "$(dirname "$dest")"
-    "$POG_POGSOURCE/build.sh" "$src" > "$dest"
+    "$POGB_POGSOURCE/build.sh" "$src" > "$dest"
     chmod 755 "$dest"
   fi
 }
