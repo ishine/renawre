@@ -18,18 +18,15 @@
 
 pog-begin-script
 
-xxx=yy !!input:data
+xxx=yy !!data:i
 xxx2=1556
 xxx3=()
 
-input='' !!input:data:r # This is one
-output=() !!output:data:r
+input='' !!data:i:r # This is one
+output=() !!data:o:r
 
 !!source pogbase/parseopts.sh
 
-POGDef::Data data
-data="zz2"
-data::mkdir
-
+sleep 2
 echo 1556
 echo 1778
