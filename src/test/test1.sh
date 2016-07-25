@@ -16,7 +16,7 @@
 #  limitations under the License.
 #***************************************************************************
 
-xxx=yy !!data:i:h:opt
+xxx= !!data:i:h:opt
 xxx2=1556
 xxx3=()
 
