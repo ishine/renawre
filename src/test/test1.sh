@@ -21,16 +21,11 @@ xxx2=1556
 xxx3=()
 
 in= !!data:i # This is one
-in2=() !!data:i # This is two
 out= !!data:o
 
 pog-begin-script
 
-thresholdPath "aaa/ccc/ddd/eee/fff/ggg" 13
-echo
-thresholdPath "zzz/aaacccdddeeefffggg" 13
-echo
-
-sleep 2
-echo 1556
-echo 1778
+echo FD1
+echo FD2 >&2
+echo FD5 >&5
+echo FD6 >&6
