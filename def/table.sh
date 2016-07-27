@@ -54,7 +54,9 @@ function POGDef::table::get {
 
 function POGDef::table::sink {
   local this="${!1}"
-  cat | gzip -nc9 > "${this}/table.gz"
+  cat \
+    | sed -r 's/^ +//; s/ +$//; s/\s+/ /g;'
+    | gzip -nc9 > "${this}/table.gz"
 }
 
 function POGDef::table::cleanUp {
