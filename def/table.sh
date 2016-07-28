@@ -27,28 +27,31 @@ function POGDef::table {
 }
 
 function POGDef::table::preCheck {
-  local this="${!1}"
-  if [[ -x "${this}/get.sh" ]]; then
+  local this="$1"
+  local dir="${!this}"
+  if [[ -x "${dir}/get.sh" ]]; then
     return 0;
   fi
-  if [[ -f "${this}/table.gz" ]]; then
+  if [[ -f "${dir}/table.gz" ]]; then
     return 0
   fi
-  printError "input table $this doesn't seem to exist"
+  printError "input table $dir doesn't seem to exist"
   return 1;
 }
 
-function POGDef::table::get {
-  local this="${!1}"
-  if [[ -x "${this}/get.sh" ]]; then
-    bash "${this}/get.sh"
+function POGDef::table::getGetter {
+  local this="$1"
+  local dir="${!this}"
+  local basePath="${2:-$dir}"
+  if [[ -x "${dir}/get.sh" ]]; then
+    printf '%s\n' "bash '${basePath}/get.sh'"
     return $?
   fi
-  if [[ -f "${this}/table.gz" ]]; then
-    gunzip -c "${this}/table.gz"
+  if [[ -f "${dir}/table.gz" ]]; then
+    printf '%s\n' "gunzip -c '${basePath}/table.gz'"
     return $?
   fi
-  printError "Failed to get from $this"
+  printError "Failed to get getter from $dir"
   return 1;
 }
 
