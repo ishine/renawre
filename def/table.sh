@@ -76,3 +76,11 @@ function POGDef::table::getGetter {
   printError "Failed to get getter from $dir"
   return 1;
 }
+
+# ========== Type-specific ========== #
+
+function POGDef::table::transpose {
+  local this="$1"
+  $this::get \
+    | awk '{for(i=2; i<=NF; i++) lst[$i]=lst[$i] " " $1} END {for (k in lst) print k lst[k]}'
+}
