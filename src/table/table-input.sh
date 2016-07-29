@@ -16,8 +16,10 @@
 #  limitations under the License.
 #***************************************************************************
 
+file= # Use input file instead of stdin
+
 out= !!table:o
 
 pog-begin-script
 
-cat | out::sink
+cat "${file:--}" | out::sink
