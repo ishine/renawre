@@ -39,6 +39,12 @@ function POGDef::table::preCheck {
   return 1;
 }
 
+function POGDef::table::cleanUp {
+  local this="${!1}"
+  rm -f "${this}/get.sh" "${this}/table.gz"
+  return 0
+}
+
 function POGDef::table::getGetter {
   local this="$1"
   local dir="${!this}"
@@ -60,10 +66,4 @@ function POGDef::table::sink {
   cat \
     | sed -r 's/^ +//; s/ +$//; s/\s+/ /g;' \
     | gzip -nc9 > "${this}/table.gz"
-}
-
-function POGDef::table::cleanUp {
-  local this="${!1}"
-  rm -f "${this}/get.sh" "${this}/table.gz"
-  return 0
 }

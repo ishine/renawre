@@ -32,3 +32,8 @@ function collectInput {
 out::initializeGetter
 forEachAssoc in getKey | mapArray collectInput \
   | out::writeToGetter
+
+if [[ $realize == 1 ]]; then
+  out::get | out::sink
+  rm -f "get.sh"
+fi # end if $realize == 1
