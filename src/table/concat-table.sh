@@ -34,6 +34,5 @@ forEachAssoc in getKey | mapArray collectInput \
   | out::writeToGetter
 
 if [[ $realize == 1 ]]; then
-  out::get | out::sink
-  rm -f "get.sh"
+  out::realize
 fi # end if $realize == 1
