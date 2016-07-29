@@ -26,7 +26,7 @@ pog-begin-script
 function collectInput {
   local i="$1"
   local pathRel="$(findRelPath "${out}" "${in[$i]}")"
-  in[$i]::getGetter $pathRel
+  in[$i]::getGetter "" "$pathRel"
 }
 
 out::initializeGetter

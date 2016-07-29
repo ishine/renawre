@@ -18,6 +18,8 @@
 
 source !.def/data.sh
 
+# ========== Base object and flow function ========== #
+
 function POGDef::table {
   local classname="$FUNCNAME"
   local objname="$1"
@@ -45,25 +47,32 @@ function POGDef::table::cleanUp {
   return 0
 }
 
+# ========== Write data ========== #
+
+function POGDef::table::sink {
+  local this="${!1}"
+  local idGetter="${2:-get}"
+  sed -r 's/^ +//; s/ +$//; s/\s+/ /g;' \
+    | gzip -nc9 > "${this}/table.gz"
+}
+
+# ========== Getter ========== #
+
 function POGDef::table::getGetter {
   local this="$1"
   local dir="${!this}"
-  local basePath="${2:-$dir}"
-  if [[ -x "${dir}/get.sh" ]]; then
-    printf '%s\n' "bash '${basePath}/get.sh'"
+  local idGetter="${2:-get}"
+  local basePath="${3:-$dir}"
+
+  if [[ -x "${dir}/${idGetter}.sh" ]]; then
+    printf '%s\n' "bash '${basePath}/${idGetter}.sh'"
     return $?
   fi
   if [[ -f "${dir}/table.gz" ]]; then
     printf '%s\n' "gunzip -c '${basePath}/table.gz'"
     return $?
   fi
+
   printError "Failed to get getter from $dir"
   return 1;
-}
-
-function POGDef::table::sink {
-  local this="${!1}"
-  cat \
-    | sed -r 's/^ +//; s/ +$//; s/\s+/ /g;' \
-    | gzip -nc9 > "${this}/table.gz"
 }
