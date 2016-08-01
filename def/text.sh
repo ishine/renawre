@@ -28,6 +28,16 @@ function POGDef::text {
   pogInjectMethods "$classname" "$objname"
 }
 
+# Texts should not have duplicated keys, unlike general table
+function POGDef::text::postCheck {
+  local this="$1"
+  if ! $this::get | awk '$1 in a {print "duplicated key: " $1; exit 1} 1 {a[$1]=1}'; then
+    printError "Duplicated key(s) detected, there maybe something wrong in main script"
+    return 1
+  fi
+  return 0
+}
+
 # ========== Type-specific ========== #
 
 # apply all transformations in order
