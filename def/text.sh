@@ -30,6 +30,17 @@ function POGDef::text {
 
 # ========== Type-specific ========== #
 
+# apply all transformations in order
+function POGDef::text::chainTrans {
+  local this="$1"
+  local cmdFull="cat"
+  while [[ -n "${2:-}" ]]; do
+    cmdFull+=" | $this::trans_$2"
+    shift
+  done
+  eval "$cmdFull"
+} # end function doAllTrans
+
 # Break continuous CJK characters into separate characters
 function POGDef::text::trans_breakCJKChars {
   perl -CSAD -lpe 's/(\p{Block=CJK_Unified_Ideographs})/ \1 /g; s/ +/ /g; s/ $//'

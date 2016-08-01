@@ -16,14 +16,12 @@
 #  limitations under the License.
 #***************************************************************************
 
-# TODO: apply multiple trans
-trans=stripTags
-
+trans=() !!a
 in= !!text:i
 out= !!text:o
 
 pog-begin-script
 
 in::get \
-  | out::trans_$trans \
+  | out::chainTrans "${trans[@]}" \
   | out::sink
