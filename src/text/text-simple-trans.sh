@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Text - a special kind of table
+# Apply some simple transformations defined in POGDef::text::trans_*
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,26 +16,14 @@
 #  limitations under the License.
 #***************************************************************************
 
-source !.def/table.sh
+# TODO: apply multiple trans
+trans=stripTags
 
-# ========== Base object and flow function ========== #
+in= !!text:i
+out= !!text:o
 
-function POGDef::text {
-  local classname="$FUNCNAME"
-  local objname="$1"
+pog-begin-script
 
-  POGDef::table "$objname"
-  pogInjectMethods "$classname" "$objname"
-}
-
-# ========== Type-specific ========== #
-
-# Break continuous CJK characters into separate characters
-function POGDef::text::trans_breakCJKChars {
-  perl -CSAD -lpe 's/(\p{Block=CJK_Unified_Ideographs})/ \1 /g; s/ +/ /g; s/ $//'
-} # end function POGDef::text::breakCJKChars
-
-# Strip special tags
-function POGDef::text::trans_stripTags {
-  sed -r 's/ \{[^}]+}//g; s/ <unk>//g'
-} # end function POGDef::text::stripTags
+in::get \
+  | out::trans_$trans \
+  | out::sink
