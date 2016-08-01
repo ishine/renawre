@@ -50,3 +50,8 @@ function POGDef::text::trans_breakCJKChars {
 function POGDef::text::trans_stripTags {
   sed -r 's/ \{[^}]+}//g; s/ <unk>//g'
 } # end function POGDef::text::stripTags
+
+# Strip all symbols and punctuations
+function POGDef::text::trans_stripPunctuations {
+  perl -CSAD -lpe 's/\p{P}|\p{C}|\p{S}|\p{M}//g; s/ +/ /g; s/ +$//'
+} # end function POGDef::text::trans_stripPunctuations
