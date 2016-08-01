@@ -41,6 +41,12 @@ function POGDef::table::preCheck {
   return 1;
 }
 
+function POGDef::data::saveMetadata {
+  local this="${1}"
+  $this::get | wc -l > "${!this}/_meta_nlines"
+  return 0
+}
+
 function POGDef::table::cleanUp {
   local this="${!1}"
   rm -f "${this}/get.sh" "${this}/table.gz"
@@ -78,6 +84,17 @@ function POGDef::table::getGetter {
 }
 
 # ========== Type-specific ========== #
+
+function POGDef::table::getNLine {
+  local this="$1"
+  local dir="${!this}"
+  if [[ -f "$dir/_meta_nlines" ]]; then
+    cat "$dir/_meta_nlines"
+  else
+    $this::get | wc -l
+  fi
+  return 0
+}
 
 function POGDef::table::transpose {
   local this="$1"
