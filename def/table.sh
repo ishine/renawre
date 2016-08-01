@@ -56,10 +56,15 @@ function POGDef::table::cleanUp {
 # ========== Write data ========== #
 
 function POGDef::table::sink {
-  local this="${!1}"
+  local this="${1}"
+  local dir="${!this}"
   local idGetter="${2:-get}"
-  sed -r 's/^ +//; s/ +$//; s/\s+/ /g;' \
-    | gzip -nc9 > "${this}/table.gz"
+  $this::outputFilter \
+    | gzip -nc9 > "${dir}/table.gz"
+}
+
+function POGDef::table::outputFilter {
+  sed -r 's/^ +//; s/ +$//; s/\s+/ /g;'
 }
 
 # ========== Getter ========== #
