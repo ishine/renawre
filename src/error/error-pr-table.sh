@@ -18,7 +18,7 @@
 
 ref= !!table:i
 hyp= !!table:i
-out= !!errorPR:o
+out= !!errorPR:o:c
 
 pog-begin-script
 

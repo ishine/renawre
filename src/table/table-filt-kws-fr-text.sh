@@ -18,7 +18,7 @@
 
 in= !!text:i
 kws= !!table:i
-out= !!table:o
+out= !!table:o:c
 
 pog-begin-script
 

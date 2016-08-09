@@ -18,7 +18,7 @@
 
 trans=() !!a
 in= !!text:i
-out= !!text:o
+out= !!text:o:c
 
 realize=0
 

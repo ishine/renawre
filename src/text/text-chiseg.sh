@@ -20,7 +20,7 @@ source !.req/jieba.sh
 
 wlist= !!table:i
 in= !!text:i
-out= !!text:o
+out= !!text:o:c
 
 pog-begin-script
 

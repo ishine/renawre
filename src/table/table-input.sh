@@ -18,7 +18,7 @@
 
 file= # Use input file instead of stdin
 
-out= !!table:o
+out= !!table:o:c
 
 pog-begin-script
 
