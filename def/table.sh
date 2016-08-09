@@ -41,7 +41,7 @@ function POGDef::table::preCheck {
   return 1;
 }
 
-function POGDef::data::saveMetadata {
+function POGDef::table::saveMetadata {
   local this="${1}"
   $this::get | wc -l > "${!this}/_meta_nlines"
   return 0
