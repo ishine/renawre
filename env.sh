@@ -34,5 +34,11 @@ if [[ -f "$_thisroot/local.sh" ]]; then
 fi
 
 source "$POGB_PARENTROOT/env.sh"
-
 export POGB_ROOTLIST="$_thisroot:$POGB_ROOTLIST"
+
+# Attempt to find hs-nlp-accessories
+if [[ -f "$_thisroot/../hs-nlp-accessories/stack.yaml" ]]; then
+  export POGB_ROOTLIST="$_thisroot/../hs-nlp-accessories/dist:$POGB_ROOTLIST"
+elif [[ -f "$HOME/hs-nlp-accessories/stack.yaml" ]]; then
+  export POGB_ROOTLIST="$HOME/hs-nlp-accessories/dist:$POGB_ROOTLIST"
+fi
