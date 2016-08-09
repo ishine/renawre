@@ -18,7 +18,7 @@
 
 ref= !!table:i
 hyp= !!table:i
-out= !!table:o
+out= !!errorPR:o
 
 pog-begin-script
 
@@ -27,3 +27,6 @@ ref::get > $tmpdir/ref.txt
 hyp::get \
   | piped-node !.nlputils/text-pr-list.jxz $tmpdir/ref.txt \
   | out::sink
+
+out::writePrettyPrinter
+$out/pretty.sh
