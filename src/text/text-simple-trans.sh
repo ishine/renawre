@@ -26,7 +26,7 @@ pog-begin-script
 
 out::initializeGetter
 (
-  in::getGetter "" "$(findRelPath "${out}" "${in}")";
+  in::getRelGetter "" out;
   out::chainTrans "${trans[@]}"
 ) | out::writeToGetter
 

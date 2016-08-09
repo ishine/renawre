@@ -60,7 +60,7 @@ function POGDef::errorPR::writePrettyPrinter {
   local this="$1"
   $this::initializeGetter pretty
   (
-    $this::getGetter '' .;
+    $this::getRelGetter;
     printf " | tail -n 1 | awk '{printf(\"%s %s  %s\\\\n\", \$2, \$3, \$8, \$9, \$10)}'" \
       '\033[1;35m + Results:' \
       '\033[;33mP=\033[1m%s \033[;33mR=\033[1m%s' \
