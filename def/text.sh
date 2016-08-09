@@ -55,6 +55,11 @@ function POGDef::text::trans_breakCJKChars {
   printf '%s' "perl -CSAD -lpe 's/(\p{Block=CJK_Unified_Ideographs})/ \1 /g; s/ +/ /g; s/ $//'"
 } # end function POGDef::text::breakCJKChars
 
+# Combine CJK characters into continuous chunk
+function POGDef::text::trans_unbreakCJKChars {
+  printf '%s' "perl -CSAD -lpe 's/(\p{Block=CJK_Unified_Ideographs}) (?=\p{Block=CJK_Unified_Ideographs})/\1/g'"
+} # end function POGDef::text::breakCJKChars
+
 # Strip special tags
 function POGDef::text::trans_stripTags {
   printf '%s' "sed -r 's/ \{[^}]+}//g; s/ <unk>//g'"
