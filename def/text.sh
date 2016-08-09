@@ -31,8 +31,8 @@ function POGDef::text {
 # Texts should not have duplicated keys, unlike general table
 function POGDef::text::postCheck {
   local this="$1"
-  if ! $this::get | awk '$1 in a {print "duplicated key: " $1; exit 1} 1 {a[$1]=1}'; then
-    printError "Duplicated key(s) detected, there maybe something wrong in main script"
+  if ! $this::get | awk '/^ / {print "Disallowed comment line: " $0; exit 1} $1 in a {print "duplicated key: " $1; exit 1} 1 {a[$1]=1}'; then
+    printError "Problems detected, there maybe something wrong in main script"
     return 1
   fi
   return 0

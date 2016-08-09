@@ -43,7 +43,7 @@ function POGDef::table::preCheck {
 
 function POGDef::table::saveMetadata {
   local this="${1}"
-  $this::get | wc -l > "${!this}/_meta_nlines"
+  $this::get | grep -v '^ ' | wc -l > "${!this}/_meta_nlines"
   return 0
 }
 
@@ -64,7 +64,7 @@ function POGDef::table::sink {
 }
 
 function POGDef::table::outputFilter {
-  sed -r 's/^ +//; s/ +$//; s/\s+/ /g;'
+  sed -r 's/ +$//; s/\s+/ /g;'
 }
 
 # ========== Getter ========== #
@@ -96,7 +96,7 @@ function POGDef::table::getNLine {
   if [[ -f "$dir/_meta_nlines" ]]; then
     cat "$dir/_meta_nlines"
   else
-    $this::get | wc -l
+    $this::get | grep -v '^ ' | wc -l
   fi
   return 0
 }
