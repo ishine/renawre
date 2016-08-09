@@ -28,6 +28,8 @@ filter="$(kws::get \
 | tr '\n' '|' \
 | sed 's/|$//; s/|/\\|/g')"
 
-in::get | grep -on "${filter}" \
+in::get \
+  | grep -v '^ ' \
+  | grep -on "${filter}" \
   | gawk 'NR==FNR {a[$1] = a[$1] " " $2; next} 1{print $1 a[FNR]}' FS=":" - FS=" " <(in::get) \
   | out::sink

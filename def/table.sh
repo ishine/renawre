@@ -104,5 +104,6 @@ function POGDef::table::getNLine {
 function POGDef::table::transpose {
   local this="$1"
   $this::get \
+    | grep -v '^ ' \
     | awk '{for(i=2; i<=NF; i++) lst[$i]=lst[$i] " " $1} END {for (k in lst) print k lst[k]}'
 }
