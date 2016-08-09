@@ -43,25 +43,24 @@ function POGDef::text::postCheck {
 # apply all transformations in order
 function POGDef::text::chainTrans {
   local this="$1"
-  local cmdFull="cat"
   while [[ -n "${2:-}" ]]; do
-    cmdFull+=" | $this::trans_$2"
+    printf ' | '
+    $this::trans_$2
     shift
   done
-  eval "$cmdFull"
 } # end function doAllTrans
 
 # Break continuous CJK characters into separate characters
 function POGDef::text::trans_breakCJKChars {
-  perl -CSAD -lpe 's/(\p{Block=CJK_Unified_Ideographs})/ \1 /g; s/ +/ /g; s/ $//'
+  printf '%s' "perl -CSAD -lpe 's/(\p{Block=CJK_Unified_Ideographs})/ \1 /g; s/ +/ /g; s/ $//'"
 } # end function POGDef::text::breakCJKChars
 
 # Strip special tags
 function POGDef::text::trans_stripTags {
-  sed -r 's/ \{[^}]+}//g; s/ <unk>//g'
+  printf '%s' "sed -r 's/ \{[^}]+}//g; s/ <unk>//g'"
 } # end function POGDef::text::stripTags
 
 # Strip all symbols and punctuations
 function POGDef::text::trans_stripPunctuations {
-  perl -CSAD -lpe 's/\p{P}|\p{C}|\p{S}|\p{M}//g; s/ +/ /g; s/ +$//'
+  printf '%s' "perl -CSAD -lpe 's/\p{P}|\p{C}|\p{S}|\p{M}//g; s/ +/ /g; s/ +$//'"
 } # end function POGDef::text::trans_stripPunctuations

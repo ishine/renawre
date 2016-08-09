@@ -20,8 +20,14 @@ trans=() !!a
 in= !!text:i
 out= !!text:o
 
+realize=0
+
 pog-begin-script
 
-in::get \
-  | out::chainTrans "${trans[@]}" \
-  | out::sink
+out::initializeGetter
+in::getGetter "" "$(findRelPath "${out}" "${in}")" | out::writeToGetter
+out::chainTrans "${trans[@]}" | out::writeToGetter
+
+if [[ $realize == 1 ]]; then
+  out::realize
+fi # end if $realize == 1

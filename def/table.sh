@@ -76,11 +76,11 @@ function POGDef::table::getGetter {
   local basePath="${3:-$dir}"
 
   if [[ -x "${dir}/${idGetter}.sh" ]]; then
-    printf '%s\n' "bash '${basePath}/${idGetter}.sh'"
+    printf '%s' "bash '${basePath}/${idGetter}.sh'"
     return $?
   fi
   if [[ -f "${dir}/table.gz" ]]; then
-    printf '%s\n' "gunzip -c '${basePath}/table.gz'"
+    printf '%s' "gunzip -c '${basePath}/table.gz'"
     return $?
   fi
 
