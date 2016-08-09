@@ -42,6 +42,13 @@ function POGDef::errorPR::preCheck {
   return 0;
 }
 
+# This is mandatory things to run
+function POGDef::errorPR::postProcess {
+  local this="$1"
+  $this::writePrettyPrinter
+  ${!this}/pretty.sh
+}
+
 # Should write proper pretty.sh
 function POGDef::text::postCheck {
   local this="$1"
