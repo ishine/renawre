@@ -25,8 +25,10 @@ realize=0
 pog-begin-script
 
 out::initializeGetter
-in::getGetter "" "$(findRelPath "${out}" "${in}")" | out::writeToGetter
-out::chainTrans "${trans[@]}" | out::writeToGetter
+(
+  in::getGetter "" "$(findRelPath "${out}" "${in}")";
+  out::chainTrans "${trans[@]}"
+) | out::writeToGetter
 
 if [[ $realize == 1 ]]; then
   out::realize
