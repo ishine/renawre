@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Input table content from stdin
+# python-jieba
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,10 +16,14 @@
 #  limitations under the License.
 #***************************************************************************
 
-file= # Use input file instead of stdin
+source !.req/python3.sh
 
-out= !!table:o:c
-
-pog-begin-script
-
-cat "${file:--}" | out::sink
+function _checker {
+  if ! python3 -c 'import jieba'; then
+    printError 'Jieba module in python3 is not available, this script need it to work'
+    printError 'You may want to use: pip install jieba3k'
+    exit 27
+  fi
+}
+_checker
+unset _checker

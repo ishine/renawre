@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "watch": "watch ./make.sh src/* def req --wait=20 --interval=10 -d -u"
+  },
+  "devDependencies": {
+    "watch": "^0.19.1"
+  }
+}

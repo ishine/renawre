@@ -16,17 +16,17 @@
 #  limitations under the License.
 #***************************************************************************
 
-realize=0
-
 in=() !!table:i
-out= !!table:o
+out= !!table:o:c
+
+realize=0
 
 pog-begin-script
 
 function collectInput {
   local i="$1"
-  local pathRel="$(findRelPath "${out}" "${in[$i]}")"
-  in[$i]::getGetter "" "$pathRel"
+  in[$i]::getRelGetter "" out
+  echo
 }
 
 out::initializeGetter

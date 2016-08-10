@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Input table content from stdin
+# CJK segmentation based on dictionary
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,10 +16,17 @@
 #  limitations under the License.
 #***************************************************************************
 
-file= # Use input file instead of stdin
+source !.req/jieba.sh
 
-out= !!table:o:c
+wlist= !!table:i
+in= !!text:i
+out= !!text:o:c
 
 pog-begin-script
 
-cat "${file:--}" | out::sink
+# Make proper word list including word frequency
+wlist::get \
+  | awk '{print $1 " " length($1)**2*10}' > $tmpdir/wlist
+
+python3 !.rtools/chiseg_jieba.py --skip 1 $tmpdir/wlist <(in::get) \
+  | out::sink

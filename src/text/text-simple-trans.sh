@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Input table content from stdin
+# Apply some simple transformations defined in POGDef::text::trans_*
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,10 +16,20 @@
 #  limitations under the License.
 #***************************************************************************
 
-file= # Use input file instead of stdin
+trans=() !!a
+in= !!text:i
+out= !!text:o:c
 
-out= !!table:o:c
+realize=0
 
 pog-begin-script
 
-cat "${file:--}" | out::sink
+out::initializeGetter
+(
+  in::getRelGetter "" out;
+  out::chainTrans "${trans[@]}"
+) | out::writeToGetter
+
+if [[ $realize == 1 ]]; then
+  out::realize
+fi # end if $realize == 1

@@ -19,33 +19,6 @@
 set -euo pipefail
 
 source "$(readlink -f "$(dirname "${BASH_SOURCE[0]}")")/env.sh"
+source "$POGB_POGSOURCE/buildhelper.sh"
 
-function buildone {
-  local src="$1"
-  local dest="$2"
-
-  # Incase result is too old, rebuild it
-  if [[ ! -f "$dest" || "$src" -nt "$dest"
-      || "$POGB_POGSOURCE/build.sh" -nt "$dest" ]]; then
-    mkdir -p "$(dirname "$dest")"
-    "$POGB_POGSOURCE/build.sh" "$src" > "$dest"
-    chmod 755 "$dest"
-  fi
-}
-
-function buildall {
-  # Iterate over all buildable files
-  local src;
-
-  shopt -s globstar
-  for src in src/**/*.sh; do
-    local dest="${src/#src/dest}"
-
-    # Do the build!
-    buildone "$src" "$dest"
-  done
-  #buildone src/test/test1.sh dist/test/test1.sh
-  shopt -u globstar
-}
-
-buildall
+nj=4 buildDir "${RENAWRE_ROOT}/src" "${1:-dest}"

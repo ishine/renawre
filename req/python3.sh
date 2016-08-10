@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Input table content from stdin
+# check existence of python3
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,10 +16,11 @@
 #  limitations under the License.
 #***************************************************************************
 
-file= # Use input file instead of stdin
-
-out= !!table:o:c
-
-pog-begin-script
-
-cat "${file:--}" | out::sink
+function _checker {
+  if ! isAvailable python3; then
+    printError 'Python3 is not available, this script need it to work'
+    exit 27
+  fi
+}
+_checker
+unset _checker

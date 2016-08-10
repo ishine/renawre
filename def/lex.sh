@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Input table content from stdin
+# Lexicon - another special case for table
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,10 +16,29 @@
 #  limitations under the License.
 #***************************************************************************
 
-file= # Use input file instead of stdin
+source !.def/table.sh
 
-out= !!table:o:c
+# ========== Base object and flow function ========== #
 
-pog-begin-script
+function POGDef::lex {
+  local classname="$FUNCNAME"
+  local objname="$1"
 
-cat "${file:--}" | out::sink
+  POGDef::table "$objname"
+  pogInjectMethods "$classname" "$objname"
+}
+
+# ========== Write data ========== #
+
+function POGDef::lex::sink {
+  local this="${1}"
+  local dir="${!this}"
+  local idGetter="${2:-get}"
+  $this::outputFilter \
+    | gzip -nc9 > "${dir}/table.gz"
+}
+
+function POGDef::lex::outputFilter {
+  LC_ALL=C sort -b -k1,1 -k2,2nr \
+    | gawk '{pron=""; for(i=3;i<=NF;i++){pron = pron " " $i}} !a[$1 " " pron]++'
+}

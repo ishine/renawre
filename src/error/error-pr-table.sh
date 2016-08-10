@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Input table content from stdin
+# Compute precision-recall from the definitions written in table
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,10 +16,14 @@
 #  limitations under the License.
 #***************************************************************************
 
-file= # Use input file instead of stdin
-
-out= !!table:o:c
+ref= !!table:i
+hyp= !!table:i
+out= !!errorPR:o:c
 
 pog-begin-script
 
-cat "${file:--}" | out::sink
+# For some unknown reason, this program doesn't allow /dev/fd/n for input file...
+ref::get > $tmpdir/ref.txt
+hyp::get \
+  | piped-node !.nlputils/text-pr-list.jxz $tmpdir/ref.txt \
+  | out::sink

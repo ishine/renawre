@@ -41,6 +41,12 @@ function POGDef::table::preCheck {
   return 1;
 }
 
+function POGDef::table::saveMetadata {
+  local this="${1}"
+  $this::getNLine 1 > "${!this}/_meta_nlines"
+  return 0
+}
+
 function POGDef::table::cleanUp {
   local this="${!1}"
   rm -f "${this}/get.sh" "${this}/table.gz"
@@ -50,10 +56,15 @@ function POGDef::table::cleanUp {
 # ========== Write data ========== #
 
 function POGDef::table::sink {
-  local this="${!1}"
+  local this="${1}"
+  local dir="${!this}"
   local idGetter="${2:-get}"
-  sed -r 's/^ +//; s/ +$//; s/\s+/ /g;' \
-    | gzip -nc9 > "${this}/table.gz"
+  $this::outputFilter \
+    | gzip -nc9 > "${dir}/table.gz"
+}
+
+function POGDef::table::outputFilter {
+  sed -r 's/ +$//; s/\s+/ /g;'
 }
 
 # ========== Getter ========== #
@@ -65,11 +76,11 @@ function POGDef::table::getGetter {
   local basePath="${3:-$dir}"
 
   if [[ -x "${dir}/${idGetter}.sh" ]]; then
-    printf '%s\n' "bash '${basePath}/${idGetter}.sh'"
+    printf '%s' "bash '${basePath}/${idGetter}.sh'"
     return $?
   fi
   if [[ -f "${dir}/table.gz" ]]; then
-    printf '%s\n' "gunzip -c '${basePath}/table.gz'"
+    printf '%s' "gunzip -c '${basePath}/table.gz'"
     return $?
   fi
 
@@ -79,8 +90,21 @@ function POGDef::table::getGetter {
 
 # ========== Type-specific ========== #
 
+function POGDef::table::getNLine {
+  local this="$1"
+  local dir="${!this}"
+  local forced="${2:-0}"
+  if [[ -f "$dir/_meta_nlines" && $forced != 1 ]]; then
+    cat "$dir/_meta_nlines"
+  else
+    $this::get | grep -v '^ ' | wc -l
+  fi
+  return 0
+}
+
 function POGDef::table::transpose {
   local this="$1"
   $this::get \
+    | grep -v '^ ' \
     | awk '{for(i=2; i<=NF; i++) lst[$i]=lst[$i] " " $1} END {for (k in lst) print k lst[k]}'
 }

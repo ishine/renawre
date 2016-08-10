@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Input table content from stdin
+# Extract a list of keywords from a text
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,10 +16,20 @@
 #  limitations under the License.
 #***************************************************************************
 
-file= # Use input file instead of stdin
-
+in= !!text:i
+kws= !!table:i
 out= !!table:o:c
 
 pog-begin-script
 
-cat "${file:--}" | out::sink
+# Get filter based on keywords
+filter="$(kws::get \
+| perl -lpe "s/^[A-Za-z0-9_'-]+\$/\\\\<\$&\\\\>/; #Match whole english word" \
+| tr '\n' '|' \
+| sed 's/|$//; s/|/\\|/g')"
+
+in::get \
+  | grep -v '^ ' \
+  | grep -on "${filter}" \
+  | gawk 'NR==FNR {a[$1] = a[$1] " " $2; next} 1{print $1 a[FNR]}' FS=":" - FS=" " <(in::get) \
+  | out::sink
