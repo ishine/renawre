@@ -17,7 +17,13 @@
 #***************************************************************************
 
 out= !!table:o:c
-from= !!
-to= !!
+from= !!a
+to= !!a
+
+# Put before begin-script, or all contents will be in log...
+source !.builtindata/psetconv.sh
 
 pog-begin-script
+
+printf '%s\n' "${_psetconvs[$from,$to]}" \
+  | out::sink

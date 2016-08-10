@@ -3,6 +3,7 @@
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
+
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
@@ -18,7 +19,9 @@
 
 declare -A _psets
 
-_psets['ipa-ce']="$(cat <<"EOPS"
+set +e # Since read do return 1 on EOF
+
+read -d '' -r _psets['ipa-ce'] <<'EOPS'
 { nonsil
 @ nonsil
 @` nonsil
@@ -63,9 +66,8 @@ z nonsil
 z` nonsil
 Z nonsil
 EOPS
-)"
 
-_psets['if+cmu-tone']="$(cat <<"EOPS"
+read -d '' -r _psets['if+cmu-tone'] <<'EOPS'
 AA nonsil
 AE nonsil
 AH nonsil
@@ -408,9 +410,8 @@ zh nonsil
  question W Y
  question B D G K P T
 EOPS
-)"
 
-_psets['if+cmu']="$(cat <<"EOPS"
+read -d '' -r _psets['if+cmu'] <<'EOPS'
 AA nonsil
 AE nonsil
 AH nonsil
@@ -577,4 +578,47 @@ zh nonsil
  question W Y
  question B D G K P T
 EOPS
-)"
+
+read -d '' -r _psets['cmu'] <<'EOPS'
+AA nonsil
+AE nonsil
+AH nonsil
+AO nonsil
+AW nonsil
+AY nonsil
+B nonsil
+CH nonsil
+D nonsil
+DH nonsil
+EH nonsil
+ER nonsil
+EY nonsil
+F nonsil
+G nonsil
+HH nonsil
+IH nonsil
+IY nonsil
+JH nonsil
+K nonsil
+L nonsil
+M nonsil
+N nonsil
+NG nonsil
+OW nonsil
+OY nonsil
+P nonsil
+R nonsil
+S nonsil
+SH nonsil
+T nonsil
+TH nonsil
+UH nonsil
+UW nonsil
+V nonsil
+W nonsil
+Y nonsil
+Z nonsil
+ZH nonsil
+EOPS
+
+set -e
