@@ -25,6 +25,9 @@ if [[ -f "$RENAWRE_ROOT/../probable-octo-guacamole/env.sh" ]]; then
   POGB_PARENTROOT="$RENAWRE_ROOT/../probable-octo-guacamole"
 elif [[ -f "$HOME/probable-octo-guacamole/env.sh" ]]; then
   POGB_PARENTROOT="$HOME/probable-octo-guacamole"
+else
+  echo 'Error: cannot find POG' 1>&2
+  exit 2
 fi
 
 export POGB_VERSIONINFO__RENAWRE="$(git --git-dir="${RENAWRE_ROOT}/.git" describe --tags --long 2>/dev/null || echo unknown)"
