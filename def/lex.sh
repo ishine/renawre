@@ -30,14 +30,6 @@ function POGDef::lex {
 
 # ========== Write data ========== #
 
-function POGDef::lex::sink {
-  local this="${1}"
-  local dir="${!this}"
-  local idGetter="${2:-get}"
-  $this::outputFilter \
-    | gzip -nc9 > "${dir}/table.gz"
-}
-
 function POGDef::lex::outputFilter {
   LC_ALL=C sort -b -k1,1 -k2,2nr \
     | gawk '{pron=""; for(i=3;i<=NF;i++){pron = pron " " $i}} !a[$1 " " pron]++'
