@@ -121,7 +121,7 @@ function POGDef::table::getApplier {
 read -d '' -r awkcmd <<"EOF" || true
 NR==FNR {
   for (i=s2; i<=NF; i++) d[$1]=d[$1] filler $i;
-  sub(filler, "", d[$1]);
+  d[$1] = substr(d[$1], 2);
   next
 }
 1 {
