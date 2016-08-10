@@ -24,6 +24,7 @@ addtable=() !!table:i:opt # Table containing a list of add-tag phones
 
 out= !!pset:o:c
 
+# Put before begin-script, or all contents will be in log...
 source !.builtindata/pset.sh
 
 pog-begin-script
