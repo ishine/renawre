@@ -43,7 +43,7 @@ function POGDef::table::preCheck {
 
 function POGDef::table::saveMetadata {
   local this="${1}"
-  $this::get | grep -v '^ ' | wc -l > "${!this}/_meta_nlines"
+  $this::getNLine 1 > "${!this}/_meta_nlines"
   return 0
 }
 
@@ -93,7 +93,8 @@ function POGDef::table::getGetter {
 function POGDef::table::getNLine {
   local this="$1"
   local dir="${!this}"
-  if [[ -f "$dir/_meta_nlines" ]]; then
+  local forced="${2:-0}"
+  if [[ -f "$dir/_meta_nlines" && $forced != 1 ]]; then
     cat "$dir/_meta_nlines"
   else
     $this::get | grep -v '^ ' | wc -l
