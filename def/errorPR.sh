@@ -50,7 +50,7 @@ function POGDef::errorPR::postProcess {
 }
 
 # Should write proper pretty.sh
-function POGDef::text::postCheck {
+function POGDef::errorPR::postCheck {
   local this="$1"
   local dir="${!this}"
   if [[ ! -x "${dir}/pretty.sh" ]]; then
