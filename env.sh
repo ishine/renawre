@@ -18,27 +18,27 @@
 
 set -euo pipefail
 
-_thisroot="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
+RENAWRE_ROOT="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
 # Attempt to find POG, based on where I usually put my file
-if [[ -f "$_thisroot/../probable-octo-guacamole/env.sh" ]]; then
-  POGB_PARENTROOT="$_thisroot/../probable-octo-guacamole"
+if [[ -f "$RENAWRE_ROOT/../probable-octo-guacamole/env.sh" ]]; then
+  POGB_PARENTROOT="$RENAWRE_ROOT/../probable-octo-guacamole"
 elif [[ -f "$HOME/probable-octo-guacamole/env.sh" ]]; then
   POGB_PARENTROOT="$HOME/probable-octo-guacamole"
 fi
 
-export POGB_VERSIONINFO__RENAWRE="$(git --git-dir="${_thisroot}/.git" describe --tags --long 2>/dev/null || echo unknown)"
+export POGB_VERSIONINFO__RENAWRE="$(git --git-dir="${RENAWRE_ROOT}/.git" describe --tags --long 2>/dev/null || echo unknown)"
 
-if [[ -f "$_thisroot/local.sh" ]]; then
-  source "$_thisroot/local.sh"
+if [[ -f "$RENAWRE_ROOT/local.sh" ]]; then
+  source "$RENAWRE_ROOT/local.sh"
 fi
 
 source "$POGB_PARENTROOT/env.sh"
-export POGB_ROOTLIST="$_thisroot:$POGB_ROOTLIST"
+export POGB_ROOTLIST="$RENAWRE_ROOT:$POGB_ROOTLIST"
 
 # Attempt to find hs-nlp-accessories
-if [[ -f "$_thisroot/../hs-nlp-accessories/stack.yaml" ]]; then
-  export POGB_ROOTLIST="$_thisroot/../hs-nlp-accessories/dist:$POGB_ROOTLIST"
+if [[ -f "$RENAWRE_ROOT/../hs-nlp-accessories/stack.yaml" ]]; then
+  export POGB_ROOTLIST="$RENAWRE_ROOT/../hs-nlp-accessories/dist:$POGB_ROOTLIST"
 elif [[ -f "$HOME/hs-nlp-accessories/stack.yaml" ]]; then
   export POGB_ROOTLIST="$HOME/hs-nlp-accessories/dist:$POGB_ROOTLIST"
 fi
