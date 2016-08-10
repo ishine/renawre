@@ -109,3 +109,41 @@ function POGDef::table::transpose {
     | grep -v '^ ' \
     | awk -v startcol=$startcol '{for(i=startcol; i<=NF; i++) lst[$i]=lst[$i] " " $1} END {for (k in lst) print k lst[k]}'
 }
+
+function POGDef::table::getApplier {
+  local this="$1"
+  local that="$2"
+  local strict="${3:-1}"
+  local filler="${4:- }"
+  local thisColStart="${5:-2}"
+  local thatColStart="${6:-2}"
+  cat <<"OUTEREOF"
+read -d '' -r awkcmd <<"EOF" || true
+NR==FNR {
+  for (i=s2; i<=NF; i++) d[$1]=d[$1] filler $i;
+  sub(filler, "", d[$1]);
+  next
+}
+1 {
+  for (i=s1; i<=NF; i++) if ($i in d) {
+    $i = d[$i];
+  } else {
+    if (strict == 1) {
+      hasError = 1;
+      print "Not found in mapping: " $i > "/dev/stderr";
+    }
+  }
+  print $0;
+}
+END {
+  if (hasError == 1) exit 5;
+}
+EOF
+OUTEREOF
+
+  $this::getRelGetter
+  cat <<EOF
+| awk -v s1=$thisColStart -v s2=$thatColStart -v filler="$filler" -v strict=$strict \
+"\$awkcmd" <($($that::getRelGetter "" $this)) /dev/stdin
+EOF
+}
