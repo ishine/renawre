@@ -30,7 +30,8 @@ function POGDef::lex {
 
 # ========== Write data ========== #
 
-function POGDef::lex::outputFilter {
-  LC_ALL=C sort -b -k1,1 -k2,2nr \
-    | gawk '{pron=""; for(i=3;i<=NF;i++){pron = pron " " $i}} !a[$1 " " pron]++'
+function POGDef::lex::getOutputFilter {
+  cat <<"EOF"
+LC_ALL=C sort -b -k1,1 -k2,2nr | gawk '{pron=""; for(i=3;i<=NF;i++){pron = pron " " $i}} !a[$1 " " pron]++'
+EOF
 }

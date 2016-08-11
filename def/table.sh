@@ -63,8 +63,8 @@ function POGDef::table::sink {
     | gzip -nc9 > "${dir}/table.gz"
 }
 
-function POGDef::table::outputFilter {
-  sed -r 's/ +$//; s/\s+/ /g;'
+function POGDef::table::getOutputFilter {
+  printf '%s' "sed -r 's/ +\$//; s/\s+/ /g;'"
 }
 
 # ========== Getter ========== #
