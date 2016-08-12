@@ -19,6 +19,6 @@
 set -euo pipefail
 
 source "$(readlink -f "$(dirname "${BASH_SOURCE[0]}")")/env.sh"
-source "$POGB_POGSOURCE/buildhelper.sh"
+source "$POGB_POGSOURCE/helper/builder.sh"
 
-nj=4 buildDir "${RENAWRE_ROOT}/src" "${1:-dest}"
+nj=4 buildDir "${RENAWRE_ROOT}/${2:-src}" "${1:-dest}"
