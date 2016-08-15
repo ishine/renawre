@@ -97,7 +97,8 @@ function POGDef::table::getNLine {
   if [[ -f "$dir/_meta_nlines" && $forced != 1 ]]; then
     cat "$dir/_meta_nlines"
   else
-    $this::get | (grep -v '^ ' || true) | wc -l
+    $this::get \
+      | awk 'NF > 1 && !/^ / {count+=1} END {print count}'
   fi
   return 0
 }
@@ -106,8 +107,8 @@ function POGDef::table::transpose {
   local this="$1"
   local startcol="${2:-2}"
   $this::get \
-    | (grep -v '^ ' || true) \
-    | awk -v startcol=$startcol '{for(i=startcol; i<=NF; i++) lst[$i]=lst[$i] " " $1} END {for (k in lst) print k lst[k]}'
+    | awk -v startcol=$startcol \
+    '!/^ / {for(i=startcol; i<=NF; i++) lst[$i]=lst[$i] " " $1} END {for (k in lst) print k lst[k]}'
 }
 
 function POGDef::table::getApplier {
