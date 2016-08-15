@@ -47,7 +47,7 @@ function POGDef::lex::getNLine {
   else
     # Only count each word once
     $this::get \
-      | 'NF > 1 && !/^ / && !($1 in dict) {count+=1; dict[$1]} END {print count}'
+      | awk 'NF > 1 && !/^ / && !($1 in dict) {count+=1; dict[$1]} END {print count}'
   fi
   return 0
 }
