@@ -17,15 +17,11 @@
 #***************************************************************************
 
 file= # Use input file instead of stdin
-builtin= # Specify a builtin phoneset name, take precedence over file
 
 addtag=()
 addtable=() !!table:i:opt # Table containing a list of add-tag phones
 
 out= !!pset:o:c
-
-# Put before begin-script, or all contents will be in log...
-source !.builtindata/pset.sh
 
 pog-begin-script
 
@@ -34,10 +30,6 @@ pog-begin-script
     addtable[$i]::get \
       | awk "{print \$1, \"${addtag[$i]}\"}"
   done; unset i
-  if [[ -n "$builtin" ]]; then
-    printf '%s\n' "${_psets[$builtin]}"
-  else # use file
-    cat "${file:--}" \
-      | awk 'NF==1 {print $1, "nonsil"; next} 1'
-  fi # end if use builtin
+  cat "${file:--}" \
+    | awk 'NF==1 {print $1, "nonsil"; next} 1'
 ) | out::sink
