@@ -30,7 +30,7 @@ fi # end if there's no cached file
 # perl normalize words like APPLE(2)
 # then delete some wrongful characters (this is an English lexicon!)
 # awk casts all english words into lower case
-grep -v '^;;;' "$CACHEFILE" \
+awk '!/^;/' "$CACHEFILE" \
   | perl -lpe 's/^([^ ]+)\([0-9]+\) /$1 /; s/[^[:ascii:]]//g; s/  / 1.0 /' \
   | awk '{$1 = tolower($1)}1' \
   | out::sink

@@ -27,7 +27,7 @@ if [[ ! -f "${CACHEFILE}" ]]; then
   wget -nv -O "${CACHEFILE}" "$URL"
 fi # end if there's no cached file
 
-grep -v '^;' "$CACHEFILE" \
+awk '!/^;/' "$CACHEFILE" \
   | perl -lpe 's#/##g; s/[0-9]//g' \
   | gawk '!/^[^a-z]/ && !($1 ~ /[^a-z]$/) {$1 = $1 " 1.0000"; print $0}' \
   | out::sink
