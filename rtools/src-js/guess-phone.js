@@ -23,6 +23,7 @@ const es = require('event-stream');
 const sprintf = require("sprintf-js").sprintf
 const product = require('cartesian-product');
 const unzip = require('compute-unzip');
+const pinyin = require("chinese-to-pinyin");
 
 if (process.argv.length < 3) {
   console.error('Usage: $0 lexicon-file');
@@ -96,7 +97,7 @@ function guessUniPron(word) {
       }
     }
   }
-  return [];
+  return pinyin(word, {numberTone: true}).split(' ').map((v) => [[1.0, v]]);
 }
 
 // Take an array of possible array of pron tuples
