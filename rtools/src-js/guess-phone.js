@@ -102,7 +102,6 @@ function guessUniPron(word) {
 // Take an array of possible array of pron tuples
 // return an array of all pronunciation combinations
 function combinePron(possibility) {
-  console.log(possibility)
   const validPossibility = possibility.filter((vs) => vs.length>0);
   if (validPossibility.length == 0) return [];
 
@@ -136,8 +135,6 @@ const lex = fs.readFileSync(process.argv[2], 'utf-8')
       }
     return obj;
   }, {});
-
-console.log(lex);
 
 // Processing input data
 // We passthrough those with multiple columns (already done)
