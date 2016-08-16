@@ -16,6 +16,8 @@
 // ***************************************************************************
 'use strict';
 
+// TODO: semantics between undefined and [] is blur
+
 const fs = require('fs');
 const es = require('event-stream');
 const sprintf = require("sprintf-js").sprintf
@@ -27,22 +29,92 @@ if (process.argv.length < 3) {
   process.exit(3);
 }
 
+// Regexs
+const reIsAscii = /^[\x00-\x7F]+$/;
+const rePureSymbol = /^[^A-Za-z]+$/;
+const reSepSil = /[-_,\/:;]/;
+const reSepAt = /[@]/;
+const reSepDot = /[.]/;
+const reSepAnd = /[&]/;
+
+// return something like this [
+//   [[0.92, 'phone1 phone2'], [0.87, 'phone1 phone3']],
+//   [[1.0, 'phone4 phone5']]
+// ];
 function guessPron(word) {
   if (word in lex) return [lex[word]];
-  return [
-    [[0.92, 'AC C'], [0.87, 'Q Q A']],
-    [[1.0, 'Z H']]
-  ];
+  if (word.length == 0) return [];
+  if (reIsAscii.test(word)) {
+    return guessAsciiPron(word);
+  } else {
+    return guessUniPron(word);
+  }
+}
+
+function guessAsciiPron(word) {
+  if (rePureSymbol.test(word)) { // pure symbol
+    return [[[1.0, 'SIL']]]
+
+  } else if (reSepSil.test(word)) { // have silence separator
+    return [].concat.apply([], word.split(reSepSil).map(guessPron));
+
+  } else if (reSepAt.test(word)) { // have @ separator, like @me
+    return [].concat.apply([], word.split(reSepAt).map(guessPron)
+                           .map(insertSeparator.bind(null, 'AE T')));
+
+  } else if (reSepDot.test(word)) { // have . separator, like www.com
+    return [].concat.apply([], word.split(reSepDot).map(guessPron)
+                           .map(insertSeparator.bind(null, 'D AA T')));
+
+  } else if (reSepAnd.test(word)) { // have & separator, like AT&T
+    return [].concat.apply([], word.split(reSepAnd).map(guessPron)
+                           .map(insertSeparator.bind(null, 'AE N')));
+
+  } else if (word.length <= 4) { // Maybe an abbr
+    return word.split('').map((alphabet) => lex[alphabet + '.']);
+
+  } else { // try splitting the word arbitrarily
+    for (let i=2; i<word.length-1; i++) {
+      const w1 = lex[word.substring(0, i)];
+      const w2 = lex[word.substring(i)];
+      if (w1 !== undefined && w2 !== undefined) {
+        return [w1, w2];
+      }
+    }
+  }
+  return [];
+}
+
+function guessUniPron(word) {
+  // Guess from shorter words
+  for (let i=1; i<word.length; i++) {
+    if (word.substring(0, word.length-i) in lex) {
+      const w1 = lex[word.substring(0, word.length-i)];
+      const w2 = guessPron(word.substring(word.length-i));
+      if (w1 !== undefined && w2 !== undefined && w2.length > 0) {
+        return [w1].concat(w2);
+      }
+    }
+  }
+  return [];
 }
 
 // Take an array of possible array of pron tuples
 // return an array of all pronunciation combinations
 function combinePron(possibility) {
-  return product(possibility).map((vs) => {
-    const [weights, prons] = unzip(vs);
-    // Average score and concatenated pronunciation
-    return [weights.reduce((l,r) => l+r)/weights.length, prons.join(' ')];
-  });
+  console.log(possibility)
+  const validPossibility = possibility.filter((vs) => vs.length>0);
+  if (validPossibility.length == 0) return [];
+
+  return product(validPossibility).map((vs) => {
+      const [weights, prons] = unzip(vs);
+      // Average score and concatenated pronunciation
+      const validWeights = weights.filter((v) => v !== -99);
+      return [
+        validWeights.reduce((l,r) => l+r)/validWeights.length,
+        prons.join(' ')
+      ];
+    });
 }
 
 // Read lexicon, brute force approach,
@@ -84,7 +156,20 @@ process.stdin
 
     const word = cols[0];
     const pronPossibilities = guessPron(word);
-    for (let [prob, pron] of combinePron(pronPossibilities)) {
-      console.log(sprintf('%s %.4f %s', word, prob, pron))
+    const probAndProns = combinePron(pronPossibilities);
+    for (let [prob, pron] of probAndProns) {
+      console.log(sprintf('%s %.4f %s', word, prob, pron));
+    }
+    // If it failed, just passthrough the original word
+    if (probAndProns.length == 0) {
+      console.error('guess-phone.js: cannot guess pron of ' + word);
+      console.log(word);
     }
   }));
+
+
+// Misc things
+function insertSeparator(sep, arr, idx) {
+  if (idx == 0) return arr;
+  return [[[-99, sep]]].concat(arr)
+}
