@@ -4,5 +4,11 @@
   },
   "devDependencies": {
     "watch": "^0.19.1"
+  },
+  "dependencies": {
+    "cartesian-product": "^2.1.2",
+    "compute-unzip": "^1.0.1",
+    "event-stream": "^3.3.4",
+    "sprintf-js": "^1.0.3"
   }
 }

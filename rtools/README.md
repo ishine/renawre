@@ -1,0 +1,1 @@
+Rtools stands for "renawre tools". They will be included in the packaged shell scripts.
