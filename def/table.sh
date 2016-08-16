@@ -148,3 +148,28 @@ OUTEREOF
 "\$awkcmd" <($($that::getRelGetter "" $this)) /dev/stdin
 EOF
 }
+
+function POGDef::table::checkInSet { # TODO
+  local this="$1"
+  local that="$2"
+  local thisColStart="${3:-2}"
+  read -d '' -r awkcmd <<"EOF" || true
+    NR==FNR {
+      if (!/^ /) d[$1]=1;
+      next;
+    }
+    1 {
+      for (i=s1; i<=NF; i++) if (!($i in d)) {
+        hasError = 1;
+        print "Not found in set: " $i > "/dev/stderr";
+      }
+    }
+    END {
+      if (hasError == 1) exit 5;
+    }
+EOF
+
+  $this::get \
+    | awk -v s1=$thisColStart \
+    "$awkcmd" <($that::get) /dev/stdin
+}

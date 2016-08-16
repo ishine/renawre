@@ -17,6 +17,7 @@
 #***************************************************************************
 
 strict=1 # Strict mode: fail if something isn't in mapping
+pset= !!pset:opt:i # Check against a phoneset, will disable strict mode if specified
 
 in= !!lex:i
 map= !!table:i
@@ -26,8 +27,17 @@ realize=0
 
 pog-begin-script
 
+# In case we're already going to check againset phone set, disable strict mode
+if [[ -n "${pset:-}" ]]; then
+  strict=0
+fi # end if phoneset specified
+
 out::initializeGetter
 in::getApplier map $strict " " 3 2 | out::writeToGetter
+
+if [[ -n "${pset:-}" ]]; then
+  out::checkInSet pset 3
+fi
 
 if [[ $realize == 1 ]]; then
   out::realize
