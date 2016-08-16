@@ -62,7 +62,7 @@ function POGDef::text::trans_unbreakCJKChars {
 
 # Strip special tags
 function POGDef::text::trans_stripTags {
-  printf '%s' "sed -r 's/ \{[^}]+}//g; s/ <unk>//g'"
+  printf '%s' "sed -r 's/ \{[^}]+}//g; s/ <[^>]+>//g'"
 } # end function POGDef::text::stripTags
 
 # Strip all symbols and punctuations
