@@ -33,7 +33,7 @@ if [[ -n "${pset:-}" ]]; then
 fi # end if phoneset specified
 
 out::initializeGetter
-in::getApplier map $strict " " 3 2 | out::writeToGetter
+in::getApplier map out $strict " " 3 2 | out::writeToGetter
 
 if [[ -n "${pset:-}" ]]; then
   out::checkInSet pset 3

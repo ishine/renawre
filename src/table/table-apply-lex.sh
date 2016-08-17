@@ -28,7 +28,7 @@ realize=0
 pog-begin-script
 
 out::initializeGetter
-in::getApplier map $strict "$filler" 2 3 | out::writeToGetter
+in::getApplier map out $strict "$filler" 2 3 | out::writeToGetter
 
 if [[ $realize == 1 ]]; then
   out::realize

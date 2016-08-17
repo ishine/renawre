@@ -114,10 +114,12 @@ function POGDef::table::transpose {
 function POGDef::table::getApplier {
   local this="$1"
   local that="$2"
-  local strict="${3:-1}"
-  local filler="${4:- }"
-  local thisColStart="${5:-2}"
-  local thatColStart="${6:-2}"
+  local target="$3" # the "output"
+  local strict="${4:-1}"
+  local filler="${5:- }"
+  local thisColStart="${6:-2}"
+  local thatColStart="${7:-2}"
+  local nameGetter="${8:-}"
   cat <<"OUTEREOF"
 read -d '' -r awkcmd <<"EOF" || true
 NR==FNR {
@@ -142,10 +144,10 @@ END {
 EOF
 OUTEREOF
 
-  $this::getRelGetter
+  $this::getRelGetter "$nameGetter" "$target"
   cat <<EOF
 | awk -v s1=$thisColStart -v s2=$thatColStart -v filler="$filler" -v strict=$strict \
-"\$awkcmd" <($($that::getRelGetter "" $this)) /dev/stdin
+"\$awkcmd" <($($that::getRelGetter "$nameGetter" "$target")) /dev/stdin
 EOF
 }
 
