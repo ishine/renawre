@@ -69,3 +69,13 @@ function POGDef::text::trans_stripTags {
 function POGDef::text::trans_stripPunctuations {
   printf '%s' "perl -CSAD -lpe 's/\p{P}|\p{C}|\p{S}|\p{M}//g; s/ +/ /g; s/ +$//'"
 } # end function POGDef::text::trans_stripPunctuations
+
+# Convert all english into lowercase
+function POGDef::text::trans_toLower {
+  printf '%s' "awk '{for(i=2; i<=NF; i++) \$i=tolower(\$i)}1'"
+} # end function POGDef::text::trans_stripPunctuations
+
+# Number (123) into Chinese number (一二三)
+function POGDef::text::trans_numberToChinese {
+  printf '%s' "perl -CSAD -lane 'use utf8; \$F[\$_] =~ tr/0123456789/零一二三四五六七八九/ for (1..\$#F); print join(\" \", @F)'"
+} # end function POGDef::text::trans_stripPunctuations
