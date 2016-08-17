@@ -163,7 +163,8 @@ function POGDef::table::checkInSet {
     1 {
       for (i=s1; i<=NF; i++) if (!($i in d)) {
         hasError = 1;
-        print "Not found in set: " $i > "/dev/stderr";
+        if (!($i in reported)) print "Not found in set: " $i " @line " FNR, $1 > "/dev/stderr";
+        reported[$i] = 1;
       }
     }
     END {
