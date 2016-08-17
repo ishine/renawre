@@ -39,6 +39,7 @@ else
   awk '!/..人 |^[再可喔在多了上沒點]{2,} |([零點一二三四五六七八九十百千萬歲斤尺丈品個位第兩][^ ]*){2,}/ && length($1) <= 4' $tmpdir/jieba_raw > $tmpdir/jieba_filtered
   # De-duplicate the word list for chinese segmentation usage
   # aka. if a >3-word phrase include another <3-word phrase, delete the longer one
+  # Finally, only keep those with frequency 5 or higher
   awk 'length($1) == 1 || $1 ~ /[A-Za-z0-9]/ {next}
     NR==FNR && (length($1) == 2 || length($1) == 3) {
       inc[$1]=1;
@@ -56,5 +57,6 @@ else
       if(keep==1)
         print $0
     }' $tmpdir/jieba_filtered $tmpdir/jieba_filtered \
+    | awk '$2>=5' \
     | out::sink
 fi # end if $raw == 1
