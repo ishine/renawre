@@ -29,9 +29,9 @@ fi # end if there's no cached file
 
 # awk delete comments and non-mandarin words and punctuations (cleanup)
 # perl formatting, getting only first col (zh-tw), and third col (pron)
-# awk delete duplicate
+# awk delete duplicate and delete too-long words
 gunzip -c "$CACHEFILE" \
   | awk '!/^\s*#/ && !($1 ~ /[a-zA-Z0-9]/) && !($1 ~ /[、。，·,・.%�]/) && !/xx5/' \
   | perl -CSAD -lpe 's/^([^ ]+) [^ ]+ \[([^\]]*)\] .*/\1 1.0000 \L\2/' \
-  | gawk '!a[$0]++' \
+  | gawk '!a[$0]++ && length($1) <= 5' \
   | out::sink
