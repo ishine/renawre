@@ -76,7 +76,7 @@ function POGDef::table::getGetter {
   local basePath="${3:-$dir}"
 
   if [[ -x "${dir}/${idGetter}.sh" ]]; then
-    printf '%s' "bash '${basePath}/${idGetter}.sh'"
+    printf '%s' "bash '${basePath}/${idGetter}.sh' --nofilter"
     return $?
   fi
   if [[ -f "${dir}/table.gz" ]]; then
@@ -151,7 +151,7 @@ OUTEREOF
 EOF
 }
 
-function POGDef::table::checkInSet { # TODO
+function POGDef::table::checkInSet {
   local this="$1"
   local that="$2"
   local thisColStart="${3:-2}"
