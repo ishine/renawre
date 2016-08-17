@@ -16,7 +16,7 @@
 #  limitations under the License.
 #***************************************************************************
 
-strict=1 # Strict mode: fail if something isn't in mapping
+strict=0 # Strict mode: fail if something isn't in mapping
 pset= !!pset:opt:i # Check against a phoneset, will disable strict mode if specified
 
 in= !!lex:i
