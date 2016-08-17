@@ -31,9 +31,7 @@ function POGDef::lex {
 # ========== Write data ========== #
 
 function POGDef::lex::getOutputFilter {
-  cat <<"EOF"
-LC_ALL=C sort -b -k1,1 -k2,2nr | gawk '{pron=""; for(i=3;i<=NF;i++){pron = pron " " $i}} !a[$1 " " pron]++'
-EOF
+  printf '%s' "LC_ALL=C sort -b -k1,1 -k2,2nr | gawk '{pron=\"\"; for(i=3;i<=NF;i++){pron = pron \" \" \$i}} !a[\$1 \" \" pron]++'"
 }
 
 # ========== Type-specific ========== #
