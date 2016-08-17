@@ -123,6 +123,7 @@ function POGDef::table::getApplier {
   cat <<"OUTEREOF"
 read -d '' -r awkcmd <<"EOF" || true
 NR==FNR {
+  if ($1 in d) next;
   for (i=s2; i<=NF; i++) d[$1]=d[$1] filler $i;
   d[$1] = substr(d[$1], 2);
   next
