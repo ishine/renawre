@@ -134,7 +134,8 @@ NR==FNR {
   } else {
     if (strict == 1) {
       hasError = 1;
-      print "Not found in mapping: " $i > "/dev/stderr";
+      if (!($i in reported)) print "Not found in mapping: " $i " @line " FNR, $1 > "/dev/stderr";
+      reported[$i] = 1;
     }
   }
   print $0;
