@@ -1,0 +1,165 @@
+AA nonsil
+AE nonsil
+AH nonsil
+AO nonsil
+AW nonsil
+AY nonsil
+B nonsil
+CH nonsil
+D nonsil
+DH nonsil
+EH nonsil
+ER nonsil
+EY nonsil
+F nonsil
+G nonsil
+HH nonsil
+IH nonsil
+IY nonsil
+JH nonsil
+K nonsil
+L nonsil
+M nonsil
+N nonsil
+NG nonsil
+OW nonsil
+OY nonsil
+P nonsil
+R nonsil
+S nonsil
+SH nonsil
+T nonsil
+TH nonsil
+UH nonsil
+UW nonsil
+V nonsil
+W nonsil
+Y nonsil
+Z nonsil
+ZH nonsil
+a nonsil
+ai nonsil
+an nonsil
+ang nonsil
+ao nonsil
+b nonsil
+c nonsil
+ch nonsil
+d nonsil
+e nonsil
+ei nonsil
+empt1 nonsil
+empt2 nonsil
+en nonsil
+eng nonsil
+er nonsil
+f nonsil
+g nonsil
+h nonsil
+i nonsil
+ia nonsil
+ian nonsil
+iang nonsil
+iao nonsil
+ie nonsil
+in nonsil
+ing nonsil
+iong nonsil
+iu nonsil
+j nonsil
+k nonsil
+l nonsil
+m nonsil
+n nonsil
+o nonsil
+ou nonsil
+p nonsil
+q nonsil
+r nonsil
+s nonsil
+sh nonsil
+sic nonsil
+t nonsil
+u nonsil
+ua nonsil
+uai nonsil
+uan nonsil
+uang nonsil
+ueng nonsil
+ui nonsil
+un nonsil
+uo nonsil
+v nonsil
+van nonsil
+ve nonsil
+vn nonsil
+x nonsil
+z nonsil
+zh nonsil
+ share AA a
+ share AO o
+ share AW ao
+ share AY ai
+ share B b
+ share D d
+ share ER er
+ share EY ei
+ share F f
+ share HH h
+ share IH i
+ share K k
+ share L l
+ share M m
+ share N n
+ share OW ou
+ share P p
+ share S s
+ share SH sh
+ share T t
+ share UW u
+ question b p m f d t n l g k h j q x zh ch sh r z c s sic
+ question b p m f
+ question d t n l
+ question g k h
+ question j q x
+ question zh ch sh r
+ question z c s
+ question i u v a o e ai ei ao ou an en ang eng er empt1 empt2 ia ie iao iu ian in iang ing ua uo uai ui uan un uang ueng ve van vn iong
+ question i u v a o e ai ei ao ou an en ang eng er empt1 empt2
+ question i u v
+ question empt1 empt2
+ question a o e
+ question ai ei ao ou
+ question an en ang eng
+ question i u v ia ie iao iu ian in iang ing ua uo uai ui uan un uang ueng ve van vn iong
+ question i ia ie iao iu ian in iang ing
+ question ia ie
+ question iao iu
+ question ian in iang ing
+ question u ua uo uai ui uan un uang ueng
+ question ua uo
+ question uai ui
+ question uan un uang ueng
+ question ve van vn iong
+ question van vn iong
+ question ia ua
+ question ie ve
+ question ian uan van
+ question in un vn
+ question iang uang
+ question ing ueng iong
+ question an en ian in uan un van vn
+ question ang eng iang ing uang ueng vn iong
+ question AA AE AH AO AW AY EH ER EY IH IY OW OY UH UW Y
+ question AA AE AH AO AW AY
+ question EH ER EY
+ question IH IY Y
+ question OW OY
+ question UH UW
+ question B CH D DH F G HH JH K L M N NG P R S SH T TH V W Y Z ZH
+ question M N NG
+ question DH F S SH TH V Z ZH
+ question L R
+ question M N NG
+ question W Y
+ question B D G K P T

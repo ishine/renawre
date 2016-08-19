@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build all scripts under this dir
+# Apply a table to a lexicon
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,9 +16,29 @@
 #  limitations under the License.
 #***************************************************************************
 
-set -euo pipefail
+strict=0 # Strict mode: fail if something isn't in mapping
+pset= !!pset:opt:i # Check against a phoneset, will disable strict mode if specified
 
-source "$(readlink -f "$(dirname "${BASH_SOURCE[0]}")")/env.sh"
-source "$POGB_POGSOURCE/helper/builder.sh"
+in= !!lex:i
+map= !!table:i
+out= !!lex:o:c
 
-nj=4 buildDir "${RENAWRE_ROOT}/${2:-src}" "${1:-dest}"
+realize=0
+
+pog-begin-script
+
+# In case we're already going to check againset phone set, disable strict mode
+if [[ -n "${pset:-}" ]]; then
+  strict=0
+fi # end if phoneset specified
+
+out::initializeGetter
+in::getApplier map out $strict " " 3 2 | out::writeToGetter
+
+if [[ -n "${pset:-}" ]]; then
+  out::checkInSet pset 3
+fi
+
+if [[ $realize == 1 ]]; then
+  out::realize
+fi # end if $realize == 1

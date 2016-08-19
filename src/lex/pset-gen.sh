@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build all scripts under this dir
+# Generate a phoneset, builtin or from a file
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,9 +16,20 @@
 #  limitations under the License.
 #***************************************************************************
 
-set -euo pipefail
+file= # Use input file instead of stdin
 
-source "$(readlink -f "$(dirname "${BASH_SOURCE[0]}")")/env.sh"
-source "$POGB_POGSOURCE/helper/builder.sh"
+addtag=()
+addtable=() !!table:i:opt # Table containing a list of add-tag phones
 
-nj=4 buildDir "${RENAWRE_ROOT}/${2:-src}" "${1:-dest}"
+out= !!pset:o:c
+
+pog-begin-script
+
+(
+  for ((i=0; i<${#addtable[@]}; i++)); do
+    addtable[$i]::get \
+      | awk "{print \$1, \"${addtag[$i]}\"}"
+  done; unset i
+  cat "${file:--}" \
+    | awk 'NF==1 {print $1, "nonsil"; next} 1'
+) | out::sink

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# CJK segmentation based on dictionary
+# Concat multiple lexicons together
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,17 +16,23 @@
 #  limitations under the License.
 #***************************************************************************
 
-source !.req/jieba.sh
+in=() !!lex:i
+out= !!lex:o:c
 
-wlist= !!table:i
-in= !!text:i
-out= !!text:o:c
+realize=0
 
 pog-begin-script
 
-# Make proper word list including word frequency
-wlist::get \
-  | awk '{print $1 " " length($1)**2*10}' > $tmpdir/wlist
+function collectInput {
+  local i="$1"
+  in[$i]::getRelGetter "" out
+  echo
+}
 
-python3 !.rtools/chiseg_jieba.py --skip 1 $tmpdir/wlist <(in::get) \
-  | out::sink
+out::initializeGetter
+forEachAssoc in getKey | mapArray collectInput \
+  | out::writeToGetter
+
+if [[ $realize == 1 ]]; then
+  out::realize
+fi # end if $realize == 1

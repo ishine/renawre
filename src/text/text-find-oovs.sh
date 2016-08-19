@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build all scripts under this dir
+# Find OOV words
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,9 +16,21 @@
 #  limitations under the License.
 #***************************************************************************
 
-set -euo pipefail
+in= !!text:i
+lex= !!table:i
+out= !!table:o:c
 
-source "$(readlink -f "$(dirname "${BASH_SOURCE[0]}")")/env.sh"
-source "$POGB_POGSOURCE/helper/builder.sh"
+pog-begin-script
 
-nj=4 buildDir "${RENAWRE_ROOT}/${2:-src}" "${1:-dest}"
+in::get \
+  | gawk \
+  'NR==FNR {ok[$1];next} 1{for(i=2; i<=NF; i++) if(!($i in ok)) print $i}' \
+  <(lex::get) - \
+  | LC_ALL=C sort \
+  | LC_ALL=C uniq -c \
+  | awk '{print $2,$1}' \
+  | out::sink
+
+printf "\e[;1m + Got %d OOVs, in total appear %d times.\e[m\n" \
+  $(out::get | wc -l) \
+  $(out::get | gawk '{sum+=$2} END {print sum}')

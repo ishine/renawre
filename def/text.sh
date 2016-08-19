@@ -52,7 +52,7 @@ function POGDef::text::chainTrans {
 
 # Break continuous CJK characters into separate characters
 function POGDef::text::trans_breakCJKChars {
-  printf '%s' "perl -CSAD -lpe 's/(\p{Block=CJK_Unified_Ideographs})/ \1 /g; s/ +/ /g; s/ $//'"
+  printf '%s' "perl -CSAD -lane '\$F[\$_] =~ s/(\p{Block=CJK_Unified_Ideographs})/ \1 /g for (1..\$#F); \$rslt = join(\" \", @F); \$rslt =~ s/ +/ /g; \$rslt =~ s/ +$//; print \$rslt'"
 } # end function POGDef::text::breakCJKChars
 
 # Combine CJK characters into continuous chunk
@@ -62,10 +62,20 @@ function POGDef::text::trans_unbreakCJKChars {
 
 # Strip special tags
 function POGDef::text::trans_stripTags {
-  printf '%s' "sed -r 's/ \{[^}]+}//g; s/ <unk>//g'"
+  printf '%s' "sed -r 's/ \{[^}]+}//g; s/ <[^>]+>//g'"
 } # end function POGDef::text::stripTags
 
 # Strip all symbols and punctuations
 function POGDef::text::trans_stripPunctuations {
-  printf '%s' "perl -CSAD -lpe 's/\p{P}|\p{C}|\p{S}|\p{M}//g; s/ +/ /g; s/ +$//'"
+  printf '%s' "perl -CSAD -lane '\$F[\$_] =~ s/\p{P}|\p{C}|\p{S}|\p{M}//g for (1..\$#F); \$rslt = join(\" \", @F); \$rslt =~ s/ +/ /g; \$rslt =~ s/ +$//; print \$rslt'"
+} # end function POGDef::text::trans_stripPunctuations
+
+# Convert all english into lowercase
+function POGDef::text::trans_toLower {
+  printf '%s' "awk '{for(i=2; i<=NF; i++) \$i=tolower(\$i)}1'"
+} # end function POGDef::text::trans_stripPunctuations
+
+# Number (123) into Chinese number (一二三)
+function POGDef::text::trans_numberToChinese {
+  printf '%s' "perl -CSAD -lane 'use utf8; \$F[\$_] =~ tr/0123456789/零一二三四五六七八九/ for (1..\$#F); print join(\" \", @F)'"
 } # end function POGDef::text::trans_stripPunctuations

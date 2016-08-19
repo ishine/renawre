@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build all scripts under this dir
+# Prepare TIMIT English pronounciation dictionary
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,9 +16,18 @@
 #  limitations under the License.
 #***************************************************************************
 
-set -euo pipefail
+out= !!lex:o:c
 
-source "$(readlink -f "$(dirname "${BASH_SOURCE[0]}")")/env.sh"
-source "$POGB_POGSOURCE/helper/builder.sh"
+pog-begin-script
 
-nj=4 buildDir "${RENAWRE_ROOT}/${2:-src}" "${1:-dest}"
+URL='https://catalog.ldc.upenn.edu/docs/LDC93S1/TIMITDIC.TXT'
+CACHEFILE="${POG_CACHEDIR}/share/timitdic.txt"
+mkdir -p "$(dirname "${CACHEFILE}")"
+if [[ ! -f "${CACHEFILE}" ]]; then
+  wget -nv -O "${CACHEFILE}" "$URL"
+fi # end if there's no cached file
+
+awk '!/^;/' "$CACHEFILE" \
+  | perl -lpe 's#/##g; s/[0-9]//g' \
+  | gawk '!/^[^a-z]/ && !($1 ~ /[^a-z]$/) {$1 = $1 " 1.0000"; print $0}' \
+  | out::sink

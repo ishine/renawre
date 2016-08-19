@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# check existence of python3
+# Use awk command from stdin to filter a table
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,11 +16,19 @@
 #  limitations under the License.
 #***************************************************************************
 
-function _checker {
-  if ! isAvailable python3; then
-    printError 'Python3 is not available, this script need it to work'
-    exit 27
-  fi
-}
-_checker
-unset _checker
+file= # Use input file instead of stdin
+
+in= !!table:i
+out= !!table:o:c
+
+realize=0
+
+pog-begin-script
+
+out::initializeGetter
+in::getRelGetter "" out | out::writeToGetter
+printf " | awk '%s'" "$(sed "s/'/'\\\\''/g" ${file:--})" | out::writeToGetter
+
+if [[ $realize == 1 ]]; then
+  out::realize
+fi # end if $realize == 1

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build all scripts under this dir
+# Apply a table to another table
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,9 +16,20 @@
 #  limitations under the License.
 #***************************************************************************
 
-set -euo pipefail
+strict=1 # Strict mode: fail if something isn't in mapping
+filler=" " # Filler between multiple mapped units
 
-source "$(readlink -f "$(dirname "${BASH_SOURCE[0]}")")/env.sh"
-source "$POGB_POGSOURCE/helper/builder.sh"
+in= !!table:i
+map= !!table:i
+out= !!table:o:c
 
-nj=4 buildDir "${RENAWRE_ROOT}/${2:-src}" "${1:-dest}"
+realize=0
+
+pog-begin-script
+
+out::initializeGetter
+in::getApplier map out $strict "$filler" | out::writeToGetter
+
+if [[ $realize == 1 ]]; then
+  out::realize
+fi # end if $realize == 1

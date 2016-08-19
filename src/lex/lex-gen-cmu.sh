@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build all scripts under this dir
+# Prepare CMU English pronounciation dictionary
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,9 +16,21 @@
 #  limitations under the License.
 #***************************************************************************
 
-set -euo pipefail
+out= !!lex:o:c
 
-source "$(readlink -f "$(dirname "${BASH_SOURCE[0]}")")/env.sh"
-source "$POGB_POGSOURCE/helper/builder.sh"
+pog-begin-script
 
-nj=4 buildDir "${RENAWRE_ROOT}/${2:-src}" "${1:-dest}"
+URL='http://svn.code.sf.net/p/cmusphinx/code/trunk/cmudict/cmudict-0.7b'
+CACHEFILE="${POG_CACHEDIR}/share/cmudict"
+mkdir -p "$(dirname "${CACHEFILE}")"
+if [[ ! -f "${CACHEFILE}" ]]; then
+  wget -nv -O "${CACHEFILE}" "$URL"
+fi # end if there's no cached file
+
+# perl normalize words like APPLE(2)
+# then delete some wrongful characters (this is an English lexicon!)
+# awk casts all english words into lower case
+awk '!/^;/' "$CACHEFILE" \
+  | perl -lpe 's/^([^ ]+)\([0-9]+\) /$1 /; s/[^[:ascii:]]//g; s/  / 1.0 /' \
+  | awk '{$1 = tolower($1)}1' \
+  | out::sink

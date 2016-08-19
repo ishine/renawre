@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# python-jieba
+# Filter a table by the key of another table
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,14 +16,24 @@
 #  limitations under the License.
 #***************************************************************************
 
-source !.req/python3.sh
+inverse=0 # Filter out instead of filter in
 
-function _checker {
-  if ! python3 -c 'import jieba'; then
-    printError 'Jieba module in python3 is not available, this script need it to work'
-    printError 'You may want to use: pip install jieba3k'
-    exit 27
-  fi
-}
-_checker
-unset _checker
+in= !!table:i
+key= !!table:i
+out= !!table:o:c
+
+realize=0
+
+pog-begin-script
+
+out::initializeGetter
+in::getRelGetter "" out | out::writeToGetter
+
+printf '| awk -v inv="%d" '\''%s %s'\'' <(%s) /dev/stdin' $inverse \
+  'NR==FNR{if (!/^ /) d[$1]=1; next}' \
+  '(inv==0 && $1 in d) || (inv==1 && !($1 in d))' \
+  "$(key::getRelGetter "" out)" | out::writeToGetter
+
+if [[ $realize == 1 ]]; then
+  out::realize
+fi # end if $realize == 1

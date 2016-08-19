@@ -63,8 +63,8 @@ function POGDef::table::sink {
     | gzip -nc9 > "${dir}/table.gz"
 }
 
-function POGDef::table::outputFilter {
-  sed -r 's/ +$//; s/\s+/ /g;'
+function POGDef::table::getOutputFilter {
+  printf '%s' "sed -r 's/ +\$//; s/\s+/ /g;'"
 }
 
 # ========== Getter ========== #
@@ -76,7 +76,7 @@ function POGDef::table::getGetter {
   local basePath="${3:-$dir}"
 
   if [[ -x "${dir}/${idGetter}.sh" ]]; then
-    printf '%s' "bash '${basePath}/${idGetter}.sh'"
+    printf '%s' "bash '${basePath}/${idGetter}.sh' --nofilter"
     return $?
   fi
   if [[ -f "${dir}/table.gz" ]]; then
@@ -97,14 +97,84 @@ function POGDef::table::getNLine {
   if [[ -f "$dir/_meta_nlines" && $forced != 1 ]]; then
     cat "$dir/_meta_nlines"
   else
-    $this::get | grep -v '^ ' | wc -l
+    $this::get \
+      | awk 'NF > 1 && !/^ / {count+=1} END {print count}'
   fi
   return 0
 }
 
 function POGDef::table::transpose {
   local this="$1"
+  local startcol="${2:-2}"
   $this::get \
-    | grep -v '^ ' \
-    | awk '{for(i=2; i<=NF; i++) lst[$i]=lst[$i] " " $1} END {for (k in lst) print k lst[k]}'
+    | awk -v startcol=$startcol \
+    '!/^ / {for(i=startcol; i<=NF; i++) lst[$i]=lst[$i] " " $1} END {for (k in lst) print k lst[k]}'
+}
+
+function POGDef::table::getApplier {
+  local this="$1"
+  local that="$2"
+  local target="$3" # the "output"
+  local strict="${4:-1}"
+  local filler="${5:- }"
+  local thisColStart="${6:-2}"
+  local thatColStart="${7:-2}"
+  local nameGetter="${8:-}"
+  cat <<"OUTEREOF"
+read -d '' -r awkcmd <<"EOF" || true
+NR==FNR {
+  if ($1 in d) next;
+  for (i=s2; i<=NF; i++) d[$1]=d[$1] filler $i;
+  d[$1] = substr(d[$1], 2);
+  next
+}
+1 {
+  for (i=s1; i<=NF; i++) if ($i in d) {
+    $i = d[$i];
+  } else {
+    if (strict == 1) {
+      hasError = 1;
+      if (!($i in reported)) print "Not found in mapping: " $i " @line " FNR, $1 > "/dev/stderr";
+      reported[$i] = 1;
+    }
+  }
+  print $0;
+}
+END {
+  if (hasError == 1) exit 5;
+}
+EOF
+OUTEREOF
+
+  $this::getRelGetter "$nameGetter" "$target"
+  cat <<EOF
+| awk -v s1=$thisColStart -v s2=$thatColStart -v filler="$filler" -v strict=$strict \
+"\$awkcmd" <($($that::getRelGetter "$nameGetter" "$target")) /dev/stdin
+EOF
+}
+
+function POGDef::table::checkInSet {
+  local this="$1"
+  local that="$2"
+  local thisColStart="${3:-2}"
+  read -d '' -r awkcmd <<"EOF" || true
+    NR==FNR {
+      if (!/^ /) d[$1]=1;
+      next;
+    }
+    1 {
+      for (i=s1; i<=NF; i++) if (!($i in d)) {
+        hasError = 1;
+        if (!($i in reported)) print "Not found in set: " $i " @line " FNR, $1 > "/dev/stderr";
+        reported[$i] = 1;
+      }
+    }
+    END {
+      if (hasError == 1) exit 5;
+    }
+EOF
+
+  $this::get \
+    | awk -v s1=$thisColStart \
+    "$awkcmd" <($that::get) /dev/stdin
 }

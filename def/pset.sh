@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Lexicon - another special case for table
+# Definition of a phone set
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -18,9 +18,18 @@
 
 source !.def/table.sh
 
+# Phoneset table format:
+#
+# phn [tag1 tag2 ...]
+#  share phn1 phn2 phn3 ... # comment line for base-sharing phone
+#  question phn1 phn2 phn3 ... # comment line for clustering rule
+#
+# Essential tags:
+# nonsil sil
+
 # ========== Base object and flow function ========== #
 
-function POGDef::lex {
+function POGDef::pset {
   local classname="$FUNCNAME"
   local objname="$1"
 
@@ -28,24 +37,12 @@ function POGDef::lex {
   pogInjectMethods "$classname" "$objname"
 }
 
-# ========== Write data ========== #
-
-function POGDef::lex::getOutputFilter {
-  printf '%s' "LC_ALL=C sort -b -k1,1 -k2,2nr | gawk '{pron=\"\"; for(i=3;i<=NF;i++){pron = pron \" \" \$i}} !a[\$1 \" \" pron]++'"
-}
-
-# ========== Type-specific ========== #
-
-function POGDef::lex::getNLine {
+# phone set should not have duplicated keys
+function POGDef::pset::postCheck {
   local this="$1"
-  local dir="${!this}"
-  local forced="${2:-0}"
-  if [[ -f "$dir/_meta_nlines" && $forced != 1 ]]; then
-    cat "$dir/_meta_nlines"
-  else
-    # Only count each word once
-    $this::get \
-      | awk 'NF > 1 && !/^ / && !($1 in dict) {count+=1; dict[$1]} END {print count}'
+  if ! $this::get | awk '/^ / {next} $1 in a {print "duplicated key: " $1; exit 1} 1 {a[$1]=1}'; then
+    printError "Problems detected, there maybe something wrong in main script"
+    return 1
   fi
   return 0
 }
