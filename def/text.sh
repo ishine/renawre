@@ -52,7 +52,7 @@ function POGDef::text::chainTrans {
 
 # Break continuous CJK characters into separate characters
 function POGDef::text::trans_breakCJKChars {
-  printf '%s' "perl -CSAD -lpe 's/(\p{Block=CJK_Unified_Ideographs})/ \1 /g; s/ +/ /g; s/ $//'"
+  printf '%s' "perl -CSAD -lane '\$F[\$_] =~ s/(\p{Block=CJK_Unified_Ideographs})/ \1 /g for (1..\$#F); \$rslt = join(\" \", @F); \$rslt =~ s/ +/ /g; \$rslt =~ s/ +$//; print \$rslt'"
 } # end function POGDef::text::breakCJKChars
 
 # Combine CJK characters into continuous chunk
@@ -67,7 +67,7 @@ function POGDef::text::trans_stripTags {
 
 # Strip all symbols and punctuations
 function POGDef::text::trans_stripPunctuations {
-  printf '%s' "perl -CSAD -lpe 's/\p{P}|\p{C}|\p{S}|\p{M}//g; s/ +/ /g; s/ +$//'"
+  printf '%s' "perl -CSAD -lane '\$F[\$_] =~ s/\p{P}|\p{C}|\p{S}|\p{M}//g for (1..\$#F); \$rslt = join(\" \", @F); \$rslt =~ s/ +/ /g; \$rslt =~ s/ +$//; print \$rslt'"
 } # end function POGDef::text::trans_stripPunctuations
 
 # Convert all english into lowercase
