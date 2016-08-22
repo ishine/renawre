@@ -49,6 +49,7 @@ function docmp {
 function setup {
   set -euo pipefail
   D="$(mktemp -d "/tmp/renawre.$F.tmp.XXXXXXXXXX")"
+  export POG_DATABASEDIR="$D/.data"
   echo "using temp dir: $D" >&2
 }
 
