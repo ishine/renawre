@@ -98,7 +98,7 @@ function POGDef::table::getNLine {
     cat "$dir/_meta_nlines"
   else
     $this::get \
-      | awk 'NF > 1 && !/^ / {count+=1} END {print count}'
+      | awk 'NF > 1 && !/^ / {count+=1} END {print count+0}'
   fi
   return 0
 }
