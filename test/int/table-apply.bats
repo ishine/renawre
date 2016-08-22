@@ -24,6 +24,11 @@ read -d '' -r input1 <<"EOF" || true
 2 bb cc
 EOF
 
+read -d '' -r input2 <<"EOF" || true
+1 aa bb
+2 bb dd
+EOF
+
 read -d '' -r lex1 <<"EOF" || true
 aa p o i
 bb l k u
@@ -40,10 +45,15 @@ read -d '' -r ansplus_input1_lex1 <<"EOF" || true
 2 l+k+u m+t+b+a
 EOF
 
+read -d '' -r ans_input2_lex1 <<"EOF" || true
+1 p o i l k u
+2 l k u dd
+EOF
+
 function runout {
   run "$@";
   local rslt=$status
-  printf "Output of %s:\n%s\n" "$*" "$output" >&2
+  printf "Output of %s (rtn %d)\n%s\n" "$*" "$rslt" "$output" >&2
   return $rslt
 }
 
@@ -99,4 +109,20 @@ function setdata {
 
   runout $dest/table/table-apply.sh --filler='+' --realize=1 in=$D/i map=$D/l out=$D/o
   docmp <(getvar ansplus_input1_lex1) <(gunzip -c $D/o/table.gz)
+}
+
+@test "$F: apply with oov, strict" {
+  setdata input2 lex1
+
+  # If in strict mode, it succeed, then something's wrong
+  if runout $dest/table/table-apply.sh in=$D/i map=$D/l out=$D/o; then
+    false
+  fi
+}
+
+@test "$F: apply with oov, non-strict" {
+  setdata input2 lex1
+
+  runout $dest/table/table-apply.sh --strict=0 in=$D/i map=$D/l out=$D/o
+  docmp <(getvar ans_input2_lex1) <($D/o/get.sh)
 }
