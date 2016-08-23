@@ -107,7 +107,7 @@ if [[ "${1:-}" == --nospecial ]]; then
   printf '%s 0\n' '<eps>'
 else
   startnum=11
-  printf '%s 0\n%s 7\n%s 8\n%s 9\n' '<eps>' '<phi>' '<sigma>' '<rho>'
+  printf '%s 0\n%s 7\n%s 8\n%s 9\n%s 10\n' '<eps>' '<phi>' '<sigma>' '<rho>' '<bound>'
 fi
 numdisambig="${1:-0}"
 EOF
