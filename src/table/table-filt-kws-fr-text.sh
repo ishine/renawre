@@ -16,6 +16,8 @@
 #  limitations under the License.
 #***************************************************************************
 
+unbreak_cjk=1 # Unbreak chinese characters first
+
 in= !!text:i
 kws= !!table:i
 out= !!table:o:c
@@ -30,6 +32,7 @@ filter="$(kws::get \
 
 in::get \
   | grep -v '^ ' \
+  | if [[ $unbreak_cjk == 1 ]]; then eval "$(in::trans_unbreakCJKChars)"; else cat; fi \
   | grep -on "${filter}" \
   | gawk 'NR==FNR {a[$1] = a[$1] " " $2; next} 1{print $1 a[FNR]}' FS=":" - FS=" " <(in::get) \
   | out::sink
