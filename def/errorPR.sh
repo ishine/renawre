@@ -70,7 +70,7 @@ function POGDef::errorPR::writePrettyPrinter {
     $this::getRelGetter;
     printf " | tail -n 1 | awk '{printf(\"%s %s  %s\\\\n\", \$2, \$3, \$8, \$9, \$10)}'" \
       '\033[1;35m + Results:' \
-      '\033[;33mP=\033[1m%s \033[;33mR=\033[1m%s' \
-      '\033[;37mF0.5=\033[1m%s  \033[;33mF1=\033[1m%s  \033[;37mF2=\033[1m%s\033[m'
+      '\033[mP=\033[1m%s \033[mR=\033[1m%s' \
+      '\033[mF0.5=%s  F1=\033[1m%s  \033[mF2=%s'
   ) | $this::writeToGetter pretty
 } # end function POGDef::errorPR::writePrettyPrinter
