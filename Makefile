@@ -15,7 +15,6 @@ _buildcache/%.cache: % _buildcache $(POGB_POGSOURCE)/compiler/pog_parse.sh
 _buildcache/%.mk: _buildcache/%.cache $(POGB_POGSOURCE)/compiler/pog_mkdepend.sh
 	$(eval basetarget := $(@:_buildcache/%.mk=%))
 	pog_mkdepend.sh $(basetarget) dest _buildcache
-	#pog_parse.sh $(basedir) $(basetarget) $@
 
 _buildcache:
 	@unlink _buildcache || true
