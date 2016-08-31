@@ -18,7 +18,7 @@
 
 out= !!lex:o:c
 
-pog-begin-script
+!@beginscript
 
 URL='http://svn.code.sf.net/p/cmusphinx/code/trunk/cmudict/cmudict-0.7b'
 CACHEFILE="${POG_CACHEDIR}/share/cmudict"

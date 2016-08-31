@@ -20,7 +20,7 @@ ref= !!table:i
 hyp= !!table:i
 out= !!errorPR:o:c
 
-pog-begin-script
+!@beginscript
 
 # For some unknown reason, this program doesn't allow /dev/fd/n for input file...
 ref::get > $tmpdir/ref.txt

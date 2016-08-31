@@ -25,7 +25,7 @@ out= !!lex:o:c
 
 realize=0
 
-pog-begin-script
+!@beginscript
 
 # In case we're already going to check againset phone set, disable strict mode
 if [[ -n "${pset:-}" ]]; then

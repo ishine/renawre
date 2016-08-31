@@ -23,7 +23,7 @@ addtable=() !!table:i:opt # Table containing a list of add-tag phones
 
 out= !!pset:o:c
 
-pog-begin-script
+!@beginscript
 
 (
   for ((i=0; i<${#addtable[@]}; i++)); do

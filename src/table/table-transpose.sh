@@ -19,6 +19,6 @@
 in= !!table:i
 out= !!table:o:c
 
-pog-begin-script
+!@beginscript
 
 in::transpose | out::sink

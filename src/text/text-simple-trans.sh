@@ -22,7 +22,7 @@ out= !!text:o:c
 
 realize=0
 
-pog-begin-script
+!@beginscript
 
 out::initializeGetter
 (

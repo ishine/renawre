@@ -20,7 +20,7 @@ in= !!text:i
 lex= !!table:i
 out= !!table:o:c
 
-pog-begin-script
+!@beginscript
 
 in::get \
   | gawk \

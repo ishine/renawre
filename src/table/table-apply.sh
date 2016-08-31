@@ -25,7 +25,7 @@ out= !!table:o:c
 
 realize=0
 
-pog-begin-script
+!@beginscript
 
 out::initializeGetter
 in::getApplier map out $strict "$filler" | out::writeToGetter

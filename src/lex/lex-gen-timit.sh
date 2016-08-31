@@ -18,7 +18,7 @@
 
 out= !!lex:o:c
 
-pog-begin-script
+!@beginscript
 
 URL='https://catalog.ldc.upenn.edu/docs/LDC93S1/TIMITDIC.TXT'
 CACHEFILE="${POG_CACHEDIR}/share/timitdic.txt"
