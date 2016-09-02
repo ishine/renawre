@@ -20,6 +20,6 @@ file= # Use input file instead of stdin
 
 out= !!table:o:c
 
-pog-begin-script
+!@beginscript
 
 cat "${file:--}" | out::sink

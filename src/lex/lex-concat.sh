@@ -21,7 +21,7 @@ out= !!lex:o:c
 
 realize=0
 
-pog-begin-script
+!@beginscript
 
 function collectInput {
   local i="$1"

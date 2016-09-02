@@ -20,7 +20,7 @@ raw=0 # Whether to keep all words in jieba word list
 
 out= !!table:o:c
 
-pog-begin-script
+!@beginscript
 
 URL='https://github.com/yanyiwu/cppjieba/blob/master/dict/jieba.dict.utf8?raw=true'
 CACHEFILE="${POG_CACHEDIR}/share/jiebalist"

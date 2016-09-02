@@ -22,7 +22,7 @@ in= !!text:i
 kws= !!table:i
 out= !!table:o:c
 
-pog-begin-script
+!@beginscript
 
 # Get filter based on keywords
 filter="$(kws::get \

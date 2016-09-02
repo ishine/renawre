@@ -18,7 +18,7 @@
 
 out= !!lex:o:c
 
-pog-begin-script
+!@beginscript
 
 URL='https://www.mdbg.net/chindict/export/cedict/cedict_1_0_ts_utf-8_mdbg.txt.gz'
 CACHEFILE="${POG_CACHEDIR}/share/cedict"

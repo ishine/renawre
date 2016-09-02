@@ -1,4 +1,4 @@
-dest/
+build/
 rtools/*.js
 node_modules/
 npm-debug.log

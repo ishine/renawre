@@ -33,19 +33,3 @@ function POGDef::lex {
 function POGDef::lex::getOutputFilter {
   printf '%s' "LC_ALL=C sort -b -k1,1 -k2,2nr | gawk '{pron=\"\"; for(i=3;i<=NF;i++){pron = pron \" \" \$i}} !a[\$1 \" \" pron]++ && \$2>0'"
 }
-
-# ========== Type-specific ========== #
-
-function POGDef::lex::getNLine {
-  local this="$1"
-  local dir="${!this}"
-  local forced="${2:-0}"
-  if [[ -f "$dir/_meta_nlines" && $forced != 1 ]]; then
-    cat "$dir/_meta_nlines"
-  else
-    # Only count each word once
-    $this::get \
-      | awk 'NF > 1 && !/^ / && !($1 in dict) {count+=1; dict[$1]} END {print count}'
-  fi
-  return 0
-}
