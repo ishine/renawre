@@ -46,12 +46,6 @@ function POGDef::table::postProcess {
   $this::writeNumberer
 }
 
-function POGDef::table::saveMetadata {
-  local this="${1}"
-  $this::getNLine 1 > "${!this}/_meta_nlines"
-  return 0
-}
-
 function POGDef::table::cleanUp {
   local this="${!1}"
   rm -f "${this}/get.sh" "${this}/table.gz"
@@ -119,19 +113,6 @@ EOF
 EOF
   ) | $this::writeToGetter num
 } # end function POGDef::errorPR::writePrettyPrinter
-
-function POGDef::table::getNLine {
-  local this="$1"
-  local dir="${!this}"
-  local forced="${2:-0}"
-  if [[ -f "$dir/_meta_nlines" && $forced != 1 ]]; then
-    cat "$dir/_meta_nlines"
-  else
-    $this::get \
-      | awk 'NF > 1 && !/^ / {count+=1} END {print count+0}'
-  fi
-  return 0
-}
 
 function POGDef::table::transpose {
   local this="$1"
