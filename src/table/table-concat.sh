@@ -25,14 +25,14 @@ realize=0
 
 function collectInput {
   local i="$1"
-  in[$i]%t::getRelGetter "$out"
+  in[$i]::getRelGetter "$out"
   echo
 }
 
-out%t::initGetter
+out::initGetter
 forEachAssoc in getKey | mapArray collectInput \
-  | out%t::writeGetter
+  | out::writeGetter
 
 if [[ $realize == 1 ]]; then
-  out%t::realize
+  out::realize
 fi # end if $realize == 1

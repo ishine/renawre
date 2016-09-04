@@ -24,6 +24,7 @@ newClass POGDef::table POGDef::data
 function POGDef::table::init {
   local this="$1"
   $this::addElem table t
+  printf -v "objVar[${this}.defaultElem]" t
 }
 
 #TODO: find another way to implement them
