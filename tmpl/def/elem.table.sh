@@ -28,7 +28,7 @@ function POGElem::table::init {
 
   printf -v "objVar[${this}.outFilter]" '%s' "sed -r 's/ +\$//; s/\s+/ /g;'"
   printf -v "objVar[${this}.sink]" "gzip -nc9 > '${dir}/${nameElem}.gz'"
-  printf -v "objVar[${this}.get]" "if [[ -x '%s' ]]; then bash '%s' --nofilter; else gunzip -c '%s'; fi" \
+  printf -v "objVar[${this}.get]" "if [[ -x '%s' ]]; then bash '%s' table; else gunzip -c '%s'; fi" \
     "${dir}/${nameElem}.sh" "${dir}/${nameElem}.sh" \
     "${dir}/${nameElem}.gz"
 }
