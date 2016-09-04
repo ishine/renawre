@@ -22,4 +22,4 @@ out= !!table:o:c
 
 !@beginscript
 
-cat "${file:--}" | out::sink
+cat "${file:--}" | out%t::sink
