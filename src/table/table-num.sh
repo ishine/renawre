@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Definition of the base table object
+# Numbering table keys, mainly for FST use
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,13 +16,28 @@
 #  limitations under the License.
 #***************************************************************************
 
-source !.def/data.sh
-source !.def/elem.table.sh
+no_special=0 # Don't use special symbols like rho and phi
+num_disambig=0 # Number of disambig symbols after normal content
 
-newClass POGDef::table POGDef::data
+in= !!table:i
+out= !!table:o:c
 
-function POGDef::table::init {
-  local this="$1"
-  $this::addElem table t
-  printf -v "objVar[${this}.defaultElem]" t
-}
+!@beginscript
+
+{
+  if [[ "$no_special" == 1 ]]; then
+    shift
+    startnum=1
+    printf '%s 0\n' '<eps>'
+  else
+    startnum=11
+    printf '%s 0\n%s 6\n%s 7\n%s 8\n%s 9\n%s 10\n' \
+      '<eps>' '#0' '<phi>' '<sigma>' '<rho>' '<bound>'
+  fi
+
+  in::get \
+    | awk 'NF >= 1 && !/^ / {print $1}' \
+    | LC_ALL=C sort -u \
+    | awk -v st=$startnum -v nd=$num_disambig \
+    '{print $1 " " st++} END {for (i=1; i<=nd; i++) print "#" i " " st++}'
+} | out::sink
