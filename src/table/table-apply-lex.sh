@@ -27,9 +27,6 @@ realize=0
 
 !@beginscript
 
-out%t::initGetter
-in::getApplier map out $strict "$filler" 2 3 | out%t::writeGetter
-
 out::initGetter
 {
   !#rtools/table-apply.awk

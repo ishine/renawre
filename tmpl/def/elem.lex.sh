@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Lexicon - another special case for lex
+# Definition of the base lex object
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,13 +16,18 @@
 #  limitations under the License.
 #***************************************************************************
 
-source !.def/table.sh
-source !.def/elem.lex.sh
+source !.def/elem.table.sh
 
-newClass POGDef::lex POGDef::table
+newClass POGElem::lex POGElem::table
 
-function POGDef::lex::init {
+function POGElem::lex::init {
   local this="$1"
-  $this::addElem lex t
-  printf -v "objVar[${this}.defaultElem]" t
+  local nameObj="${this%%\%*}"
+  local nameElem="${this#*\%}"
+  local dir="${!nameObj}"
+
+  # Sort probabilities and delete zero-probability prons
+  printf -v "objVar[${this}.outFilter]" '%s' "LC_ALL=C sort -b -k1,1 -k2,2nr | gawk '{pron=\"\"; for(i=3;i<=NF;i++){pron = pron \" \" \$i}} !a[\$1 \" \" pron]++ && \$2>0'"
+
+  printf -v "objVar[${this}.get]" "${objVar[${this}.get]//' table;/' lex;}"
 }
