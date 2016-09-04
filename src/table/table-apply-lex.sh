@@ -30,11 +30,11 @@ realize=0
 out::initGetter
 {
   !#rtools/table-apply.awk
-  map::getRelGetter "${out}"
+  map::getRelGetter "$out"
   printf ' | awk -v startcol1=3 -v filler="%s" -v strict=%d -f <(~GET!%s)' \
     "$filler" $strict "rtools/table-apply.awk"
   printf ' /dev/stdin <('
-  in::getRelGetter "${out}"
+  in::getRelGetter "$out"
   printf ')'
 } | out::writeGetter
 

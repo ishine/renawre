@@ -16,21 +16,22 @@
 #  limitations under the License.
 #***************************************************************************
 
-source !.def/table.sh
+source !.def/data.sh
+source !.def/elem.table.sh
 
-# ========== Base object and flow function ========== #
+newClass POGDef::text POGDef::data
 
-function POGDef::text {
-  local classname="$FUNCNAME"
-  local objname="$1"
-
-  POGDef::table "$objname"
-  pogInjectMethods "$classname" "$objname"
+function POGDef::text::init {
+  local this="$1"
+  $this::addElem table t
+  printf -v "objVar[${this}.defaultElem]" t
 }
 
 # Texts should not have duplicated keys, unlike general table
-function POGDef::text::postCheck {
+function POGDef::pset::postCheck {
   local this="$1"
+  POGDef::data::postCheck "$this"
+
   if ! $this::get | awk '/^ / {print "Disallowed comment line: " $0; exit 1} $1 in a {print "duplicated key: " $1; exit 1} 1 {a[$1]=1}'; then
     printError "Problems detected, there maybe something wrong in main script"
     return 1

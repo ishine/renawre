@@ -16,10 +16,10 @@
 #  limitations under the License.
 #***************************************************************************
 
-source !.def/table.sh
+source !.def/data.sh
 source !.def/elem.lex.sh
 
-newClass POGDef::lex POGDef::table
+newClass POGDef::lex POGDef::data
 
 function POGDef::lex::init {
   local this="$1"
