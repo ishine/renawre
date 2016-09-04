@@ -34,6 +34,17 @@ printf '| awk -v inv="%d" '\''%s %s'\'' <(%s) /dev/stdin' $inverse \
   '(inv==0 && $1 in d) || (inv==1 && !($1 in d))' \
   "$(key::getRelGetter "" out)" | out%t::writeGetter
 
+out::initGetter
+{
+  !#rtools/table-filter.awk
+  key::getRelGetter "${out}"
+  printf ' | awk -v inverse=%d -f <(~GET!%s)' \
+    $inverse "rtools/table-filter.awk"
+  printf ' /dev/stdin <('
+  in::getRelGetter "${out}"
+  printf ')'
+} | out::writeGetter
+
 if [[ $realize == 1 ]]; then
   out::realize
 fi # end if $realize == 1
