@@ -25,10 +25,10 @@ realize=0
 
 !@beginscript
 
-out::initializeGetter
-in::getRelGetter "" out | out::writeToGetter
-printf " | awk '%s'" "$(sed "s/'/'\\\\''/g" ${file:--})" | out::writeToGetter
+out%t::initGetter
+in%t::getRelGetter "$out" | out%t::writeGetter
+printf " | awk '%s'" "$(sed "s/'/'\\\\''/g" ${file:--})" | out%t::writeGetter
 
 if [[ $realize == 1 ]]; then
-  out::realize
+  out%t::realize
 fi # end if $realize == 1

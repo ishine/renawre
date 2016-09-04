@@ -27,8 +27,8 @@ realize=0
 
 !@beginscript
 
-out::initializeGetter
-in::getApplier map out $strict "$filler" | out::writeToGetter
+out%t::initGetter
+in::getApplier map out $strict "$filler" | out%t::writeGetter
 
 if [[ $realize == 1 ]]; then
   out::realize

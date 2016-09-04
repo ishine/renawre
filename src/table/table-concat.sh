@@ -25,7 +25,7 @@ realize=0
 
 function collectInput {
   local i="$1"
-  in[$i]%t::getRelGetter "${out}"
+  in[$i]%t::getRelGetter "$out"
   echo
 }
 
