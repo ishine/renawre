@@ -29,9 +29,9 @@ function collectInput {
   echo
 }
 
-out%t::initGetter
+out::initGetter
 forEachAssoc in getKey | mapArray collectInput \
-  | out%t::writeGetter
+  | out::writeGetter
 
 if [[ $realize == 1 ]]; then
   out::realize

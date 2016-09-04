@@ -26,13 +26,13 @@ realize=0
 
 !@beginscript
 
-out%t::initGetter
-in::getRelGetter "" out | out%t::writeGetter
+out::initGetter
+in::getRelGetter "" out | out::writeGetter
 
 printf '| awk -v inv="%d" '\''%s %s'\'' <(%s) /dev/stdin' $inverse \
   'NR==FNR{if (!/^ /) d[$1]=1; next}' \
   '(inv==0 && $1 in d) || (inv==1 && !($1 in d))' \
-  "$(key::getRelGetter "" out)" | out%t::writeGetter
+  "$(key::getRelGetter "" out)" | out::writeGetter
 
 out::initGetter
 {

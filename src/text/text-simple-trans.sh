@@ -24,11 +24,11 @@ realize=0
 
 !@beginscript
 
-out%t::initGetter
+out::initGetter
 (
   in::getRelGetter "" out;
   out::chainTrans "${trans[@]}"
-) | out%t::writeGetter
+) | out::writeGetter
 
 if [[ $realize == 1 ]]; then
   out::realize
