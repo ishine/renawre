@@ -25,10 +25,12 @@ realize=0
 !@beginscript
 
 out::initGetter
-(
+{
+  !#rtools/text-simpletrans.sh
   in::getRelGetter "${out}";
-  out::chainTrans "${trans[@]}"
-) | out::writeGetter
+  printf ' | bash <(~GET!rtools/text-simpletrans.sh) %s' \
+    "${trans[*]}"
+} | out::writeGetter
 
 if [[ $realize == 1 ]]; then
   out::realize
