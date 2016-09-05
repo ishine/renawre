@@ -26,7 +26,7 @@ realize=0
 
 out::initGetter
 (
-  in::getRelGetter "" out;
+  in::getRelGetter "${out}";
   out::chainTrans "${trans[@]}"
 ) | out::writeGetter
 

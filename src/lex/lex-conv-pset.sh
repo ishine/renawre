@@ -49,5 +49,6 @@ fi # end if $realize == 1
 
 # Check correctness if phoneset if specified
 if [[ -n "${pset:-}" ]]; then
-  out::checkInSet pset 3 # FIXME
+  awk -v startcol2=3 -v strict=1 -f !.rtools/table-apply.awk \
+    <(pset::get) <(out::get) > /dev/null
 fi
