@@ -16,61 +16,17 @@
 #  limitations under the License.
 #***************************************************************************
 
-source !.def/table.sh
+source !.def/elem.table.sh
+source !.def/elem.prettyPR.sh
+source !.def/data.sh
 
-# ========== Base object and flow function ========== #
+newClass POGDef::errorPR POGDef::data
 
-function POGDef::errorPR {
-  local classname="$FUNCNAME"
-  local objname="$1"
-
-  POGDef::table "$objname"
-  pogInjectMethods "$classname" "$objname"
-}
-
-function POGDef::errorPR::preCheck {
+function POGDef::errorPR::init {
   local this="$1"
-  local dir="${!this}"
-  if [[ ! -x "${dir}/pretty.sh" ]]; then
-    printError "input $dir/pretty.sh doesn't seem to exist"
-    return 1;
-  fi
-  if [[ ! -f "${dir}/table.gz" ]]; then
-    printError "input $dir/table.gz doesn't seem to exist"
-    return 1
-  fi
-  return 0;
+  printf -v "objVar[${this}.defaultElem]" t
+  printf -v "objVar[${this}%pretty.target]" '%s' "${this}%t"
+
+  $this::addElem table t
+  $this::addElem prettyPR pretty
 }
-
-# This is mandatory things to run
-function POGDef::errorPR::postProcess {
-  local this="$1"
-  $this::writePrettyPrinter
-  ${!this}/pretty.sh
-}
-
-# Should write proper pretty.sh
-function POGDef::errorPR::postCheck {
-  local this="$1"
-  local dir="${!this}"
-  if [[ ! -x "${dir}/pretty.sh" ]]; then
-    printError "output $dir/pretty.sh doesn't seem to exist"
-    return 1;
-  fi
-  return 0
-}
-
-# ========== Type-specific ========== #
-
-# Write a shell script to pretty-print error data
-function POGDef::errorPR::writePrettyPrinter {
-  local this="$1"
-  $this::initializeGetter pretty
-  (
-    $this::getRelGetter;
-    printf " | tail -n 1 | awk '{printf(\"%s %s  %s\\\\n\", \$2, \$3, \$8, \$9, \$10)}'" \
-      '\033[1;35m + Results:' \
-      '\033[mP=\033[1m%s \033[mR=\033[1m%s' \
-      '\033[mF0.5=%s  F1=\033[1m%s  \033[mF2=%s'
-  ) | $this::writeToGetter pretty
-} # end function POGDef::errorPR::writePrettyPrinter
