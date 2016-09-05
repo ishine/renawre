@@ -28,7 +28,7 @@ function POGDef::text::init {
 }
 
 # Texts should not have duplicated keys, unlike general table
-function POGDef::pset::postCheck {
+function POGDef::text::postCheck {
   local this="$1"
   POGDef::data::postCheck "$this"
 
