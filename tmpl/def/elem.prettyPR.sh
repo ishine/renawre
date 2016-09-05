@@ -72,7 +72,7 @@ function POGElem::prettyPR::postProcess {
       '\033[mF0.5=%s  F1=\033[1m%s  \033[mF2=%s'
   } | $this::writeGetter
 
-  ${dir}/${thisElem}.sh
+  ${dir}/${nameElem}.sh
 
   return 0
 }
