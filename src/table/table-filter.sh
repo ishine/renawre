@@ -27,17 +27,9 @@ realize=0
 !@beginscript
 
 out::initGetter
-in::getRelGetter "" out | out::writeGetter
-
-printf '| awk -v inv="%d" '\''%s %s'\'' <(%s) /dev/stdin' $inverse \
-  'NR==FNR{if (!/^ /) d[$1]=1; next}' \
-  '(inv==0 && $1 in d) || (inv==1 && !($1 in d))' \
-  "$(key::getRelGetter "" out)" | out::writeGetter
-
-out::initGetter
 {
   !#rtools/table-filter.awk
-  key::getRelGetter "${out}"
+  key::getRelGetter "$out"
   printf ' | awk -v inverse=%d -f <(~GET!%s)' \
     $inverse "rtools/table-filter.awk"
   printf ' /dev/stdin <('
