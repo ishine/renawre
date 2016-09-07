@@ -32,13 +32,23 @@ if [[ -n "${pset:-}" ]]; then
   strict=0
 fi # end if phoneset specified
 
-out::initializeGetter
-in::getApplier map out $strict " " 3 2 | out::writeToGetter
-
-if [[ -n "${pset:-}" ]]; then
-  out::checkInSet pset 3
-fi
+out::initGetter
+{
+  !#rtools/table-apply.awk
+  map::getRelGetter "$out"
+  printf ' | awk -v startcol2=3 -v strict=%d -f <(~GET!%s)' \
+    $strict "rtools/table-apply.awk"
+  printf ' /dev/stdin <('
+  in::getRelGetter "$out"
+  printf ')'
+} | out::writeGetter
 
 if [[ $realize == 1 ]]; then
   out::realize
 fi # end if $realize == 1
+
+# Check correctness if phoneset if specified
+if [[ -n "${pset:-}" ]]; then
+  awk -v startcol2=3 -v strict=1 -f !.rtools/table-apply.awk \
+    <(pset::get) <(out::get) > /dev/null
+fi

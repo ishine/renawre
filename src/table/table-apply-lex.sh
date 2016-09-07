@@ -27,8 +27,16 @@ realize=0
 
 !@beginscript
 
-out::initializeGetter
-in::getApplier map out $strict "$filler" 2 3 | out::writeToGetter
+out::initGetter
+{
+  !#rtools/table-apply.awk
+  map::getRelGetter "$out"
+  printf ' | awk -v startcol1=3 -v filler="%s" -v strict=%d -f <(~GET!%s)' \
+    "$filler" $strict "rtools/table-apply.awk"
+  printf ' /dev/stdin <('
+  in::getRelGetter "$out"
+  printf ')'
+} | out::writeGetter
 
 if [[ $realize == 1 ]]; then
   out::realize

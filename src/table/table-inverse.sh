@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Transpose the table concent (value became key)
+# Inverse the table concent (value became key)
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,9 +16,22 @@
 #  limitations under the License.
 #***************************************************************************
 
+realize=0
+startcol=2
+
 in= !!table:i
 out= !!table:o:c
 
 !@beginscript
 
-in::transpose | out::sink
+out::initGetter
+{
+  !#rtools/table-inverse.awk
+  in::getRelGetter "$out"
+  printf ' | awk -v startcol=%d -f <(~GET!%s)' \
+    $startcol "rtools/table-inverse.awk"
+} | out::writeGetter
+
+if [[ $realize == 1 ]]; then
+  out::realize
+fi # end if $realize == 1

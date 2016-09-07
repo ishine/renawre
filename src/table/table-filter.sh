@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Lexicon - another special case for lex
+# Filter a table by the key of another table
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,13 +16,27 @@
 #  limitations under the License.
 #***************************************************************************
 
-source !.def/data.sh
-source !.def/elem.lex.sh
+inverse=0 # Filter out instead of filter in
 
-newClass POGDef::lex POGDef::data
+in= !!table:i
+key= !!table:i
+out= !!table:o:c
 
-function POGDef::lex::init {
-  local this="$1"
-  $this::addElem lex t
-  printf -v "objVar[${this}.defaultElem]" t
-}
+realize=0
+
+!@beginscript
+
+out::initGetter
+{
+  !#rtools/table-filter.awk
+  key::getRelGetter "$out"
+  printf ' | awk -v inverse=%d -f <(~GET!%s)' \
+    $inverse "rtools/table-filter.awk"
+  printf ' /dev/stdin <('
+  in::getRelGetter "${out}"
+  printf ')'
+} | out::writeGetter
+
+if [[ $realize == 1 ]]; then
+  out::realize
+fi # end if $realize == 1

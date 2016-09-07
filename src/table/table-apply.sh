@@ -18,6 +18,8 @@
 
 strict=1 # Strict mode: fail if something isn't in mapping
 filler=" " # Filler between multiple mapped units
+startcol_input=2 # start column of input
+startcol_map=2 # start column of mapping
 
 in= !!table:i
 map= !!table:i
@@ -27,8 +29,17 @@ realize=0
 
 !@beginscript
 
-out::initializeGetter
-in::getApplier map out $strict "$filler" | out::writeToGetter
+out::initGetter
+{
+  !#rtools/table-apply.awk
+  map::getRelGetter "${out}"
+  printf ' | awk -v startcol1=%d -v startcol2=%d -v filler="%s" -v strict=%d -f <(~GET!%s)' \
+    $startcol_map $startcol_input \
+    "$filler" $strict "rtools/table-apply.awk"
+  printf ' /dev/stdin <('
+  in::getRelGetter "${out}"
+  printf ')'
+} | out::writeGetter
 
 if [[ $realize == 1 ]]; then
   out::realize

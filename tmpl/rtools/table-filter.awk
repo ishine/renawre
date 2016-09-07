@@ -1,5 +1,4 @@
-#!/usr/bin/env bash
-# Lexicon - another special case for lex
+# Filter table according to another table
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,13 +15,16 @@
 #  limitations under the License.
 #***************************************************************************
 
-source !.def/data.sh
-source !.def/elem.lex.sh
-
-newClass POGDef::lex POGDef::data
-
-function POGDef::lex::init {
-  local this="$1"
-  $this::addElem lex t
-  printf -v "objVar[${this}.defaultElem]" t
+BEGIN {
+  if (inverse == "") {
+    inverse = 0;
+  }
 }
+
+NR==FNR {
+  if (/^ /) next;
+  d[$1] = 1;
+  next;
+}
+
+(inverse==0 && $1 in d) || (inverse==1 && !($1 in d))

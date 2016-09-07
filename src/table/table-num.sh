@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Filter a table by the key of another table
+# Numbering table keys, mainly for FST use
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,24 +16,28 @@
 #  limitations under the License.
 #***************************************************************************
 
-inverse=0 # Filter out instead of filter in
+no_special=0 # Don't use special symbols like rho and phi
+num_disambig=0 # Number of disambig symbols after normal content
 
 in= !!table:i
-key= !!table:i
 out= !!table:o:c
-
-realize=0
 
 !@beginscript
 
-out::initializeGetter
-in::getRelGetter "" out | out::writeToGetter
+{
+  if [[ "$no_special" == 1 ]]; then
+    shift
+    startnum=1
+    printf '%s 0\n' '<eps>'
+  else
+    startnum=11
+    printf '%s 0\n%s 6\n%s 7\n%s 8\n%s 9\n%s 10\n' \
+      '<eps>' '#0' '<phi>' '<sigma>' '<rho>' '<bound>'
+  fi
 
-printf '| awk -v inv="%d" '\''%s %s'\'' <(%s) /dev/stdin' $inverse \
-  'NR==FNR{if (!/^ /) d[$1]=1; next}' \
-  '(inv==0 && $1 in d) || (inv==1 && !($1 in d))' \
-  "$(key::getRelGetter "" out)" | out::writeToGetter
-
-if [[ $realize == 1 ]]; then
-  out::realize
-fi # end if $realize == 1
+  in::get \
+    | awk 'NF >= 1 && !/^ / {print $1}' \
+    | LC_ALL=C sort -u \
+    | awk -v st=$startnum -v nd=$num_disambig \
+    '{print $1 " " st++} END {for (i=1; i<=nd; i++) print "#" i " " st++}'
+} | out::sink

@@ -1,5 +1,4 @@
-#!/usr/bin/env bash
-# Lexicon - another special case for lex
+# Inverse table (value <-> key)
 #***************************************************************************
 #  Copyright 2014-2016, mettatw
 #
@@ -16,13 +15,20 @@
 #  limitations under the License.
 #***************************************************************************
 
-source !.def/data.sh
-source !.def/elem.lex.sh
+BEGIN {
+  if (startcol < 2) {
+    startcol = 2;
+  }
+}
 
-newClass POGDef::lex POGDef::data
+!/^ / {
+  for(i=startcol; i<=NF; i++) {
+    lst[$i]=lst[$i] " " $1
+  }
+}
 
-function POGDef::lex::init {
-  local this="$1"
-  $this::addElem lex t
-  printf -v "objVar[${this}.defaultElem]" t
+END {
+  for (k in lst) {
+    print k lst[k]
+  }
 }

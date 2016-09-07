@@ -25,9 +25,9 @@ realize=0
 
 !@beginscript
 
-out::initializeGetter
-in::getRelGetter "" out | out::writeToGetter
-printf " | awk '%s'" "$(sed "s/'/'\\\\''/g" ${file:--})" | out::writeToGetter
+out::initGetter
+in::getRelGetter "$out" | out::writeGetter
+printf " | awk '%s'" "$(sed "s/'/'\\\\''/g" ${file:--})" | out::writeGetter
 
 if [[ $realize == 1 ]]; then
   out::realize

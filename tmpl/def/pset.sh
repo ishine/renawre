@@ -16,7 +16,10 @@
 #  limitations under the License.
 #***************************************************************************
 
-source !.def/table.sh
+source !.def/data.sh
+source !.def/elem.table.sh
+
+newClass POGDef::pset POGDef::data
 
 # Phoneset table format:
 #
@@ -27,19 +30,17 @@ source !.def/table.sh
 # Essential tags:
 # nonsil sil
 
-# ========== Base object and flow function ========== #
-
-function POGDef::pset {
-  local classname="$FUNCNAME"
-  local objname="$1"
-
-  POGDef::table "$objname"
-  pogInjectMethods "$classname" "$objname"
+function POGDef::pset::init {
+  local this="$1"
+  $this::addElem table t
+  printf -v "objVar[${this}.defaultElem]" t
 }
 
 # phone set should not have duplicated keys
 function POGDef::pset::postCheck {
   local this="$1"
+  POGDef::data::postCheck "$this"
+
   if ! $this::get | awk '/^ / {next} $1 in a {print "duplicated key: " $1; exit 1} 1 {a[$1]=1}'; then
     printError "Problems detected, there maybe something wrong in main script"
     return 1
