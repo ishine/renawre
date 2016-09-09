@@ -21,8 +21,6 @@ endef
 
 $(foreach file,$(UNITS),$(eval $(call renawre_singlerule,$(file))))
 
-# Building all directory linking rule
-
 define renawre_dirrule =
 $(1)/rdata: $(1)
 	@if [[ -h "$$@" ]]; then unlink "$$@"; fi
