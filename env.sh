@@ -37,8 +37,9 @@ if [[ -f "$RENAWRE_ROOT/local.sh" ]]; then
 fi
 
 source "$POGB_PARENTROOT/env.sh"
-export POGB_ROOTLIST="$RENAWRE_ROOT/tmpl:${POGB_ROOTLIST:-}"
-export POGB_BUILDLIST="$RENAWRE_ROOT/src:${POGB_BUILDLIST:-}"
+export POGB_ROOTLIST="$RENAWRE_ROOT/tmpl:${POGB_ROOTLIST-}"
+export POGB_BUILDLIST="$RENAWRE_ROOT/src:${POGB_BUILDLIST-}"
+export POGB_EXTRAMAKELIST="$RENAWRE_ROOT/helper/recipe.mk:${POGB_EXTRAMAKELIST-}"
 
 # Attempt to find hs-nlp-accessories
 if [[ -f "$RENAWRE_ROOT/../hs-nlp-accessories/stack.yaml" ]]; then
