@@ -15,11 +15,7 @@
 #  limitations under the License.
 #***************************************************************************
 
-define renawre_singlerule =
-$(1): $(dir $(1))rdata
-endef
-
-$(foreach file,$(UNITS),$(eval $(call renawre_singlerule,$(file))))
+all: $(DIRS:%=%/rdata)
 
 define renawre_dirrule =
 $(1)/rdata: $(1)
