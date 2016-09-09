@@ -18,7 +18,7 @@
 
 set -euo pipefail
 
-RENAWRE_ROOT="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
+export RENAWRE_ROOT="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
 # Attempt to find POG, based on where I usually put my file
 if [[ -f "$RENAWRE_ROOT/../probable-octo-guacamole/env.sh" ]]; then
