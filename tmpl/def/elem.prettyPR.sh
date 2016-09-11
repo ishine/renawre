@@ -66,10 +66,13 @@ function POGElem::prettyPR::postProcess {
   $this::initGetter
   {
     $target::getRelGetter "$dir";
-    printf " | tail -n 1 | awk '{printf(\"%s %s  %s\\\\n\", \$2, \$3, \$8, \$9, \$10)}'" \
+    printf " | tail -n 1 | awk '{printf(\"%s %s  %s\\\\n\", \$2, \$3, %s, %s, %s)}'" \
       '\033[1;35m + Results:' \
       '\033[mP=\033[1m%s \033[mR=\033[1m%s' \
-      '\033[mF0.5=%s  F1=\033[1m%s  \033[mF2=%s'
+      '\033[mF0.5=%.3f  F1=\033[1m%.3f  \033[mF2=%.3f' \
+      '1.25 * $2 * $3 / (0.25*$2+$3)' \
+      '2 * $2 * $3 / ($2+$3)' \
+      '5 * $2 * $3 / (4*$2+$3)'
   } | $this::writeGetter
 
   ${dir}/${nameElem}.sh

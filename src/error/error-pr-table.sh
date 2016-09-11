@@ -23,7 +23,9 @@ out= !!errorPR:o:c
 !@beginscript
 
 # For some unknown reason, this program doesn't allow /dev/fd/n for input file...
-ref::get > $tmpdir/ref.txt
-hyp::get \
-  | piped-node !.nlputils/text-pr-list.jxz $tmpdir/ref.txt \
+awk -f !.rtools/pr-from-table.awk <(ref::get) <(hyp::get) \
+  | out%details::sink
+perl !.rtools/pr-stats-by-kw.pl < <(out%details::get) \
+  | out%kws::sink
+perl !.rtools/pr-stats-by-utt.pl < <(out%details::get) \
   | out::sink

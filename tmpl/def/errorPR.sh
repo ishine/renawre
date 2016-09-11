@@ -28,5 +28,7 @@ function POGDef::errorPR::init {
   printf -v "objVar[${this}%pretty.target]" '%s' "${this}%t"
 
   $this::addElem table t
+  $this::addElem table details
+  $this::addElem table kws
   $this::addElem prettyPR pretty
 }
