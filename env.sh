@@ -20,23 +20,25 @@ set -euo pipefail
 
 export RENAWRE_ROOT="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
-# Attempt to find POG, based on where I usually put my file
-if [[ -f "$RENAWRE_ROOT/../probable-octo-guacamole/env.sh" ]]; then
-  POGB_PARENTROOT="$RENAWRE_ROOT/../probable-octo-guacamole"
-elif [[ -f "$HOME/probable-octo-guacamole/env.sh" ]]; then
-  POGB_PARENTROOT="$HOME/probable-octo-guacamole"
-else
-  echo 'Error: cannot find POG' 1>&2
-  exit 2
-fi
-
-export POGB_VERSIONINFO__RENAWRE="$(git --git-dir="${RENAWRE_ROOT}/.git" describe --tags --long 2>/dev/null || echo unknown)"
-
 if [[ -f "$RENAWRE_ROOT/local.sh" ]]; then
   source "$RENAWRE_ROOT/local.sh"
 fi
 
-source "$POGB_PARENTROOT/env.sh"
+# Attempt to find POG if not specified
+if [[ ! -n "${POGB_POGSOURCE-}" ]]; then
+  if [[ -f "$RENAWRE_ROOT/../probable-octo-guacamole/env.sh" ]]; then
+    POGB_POGSOURCE="$RENAWRE_ROOT/../probable-octo-guacamole"
+  elif [[ -f "$HOME/probable-octo-guacamole/env.sh" ]]; then
+    POGB_POGSOURCE="$HOME/probable-octo-guacamole"
+  else
+    echo 'Error: cannot find POG' 1>&2
+    exit 2
+  fi
+fi
+source "$POGB_POGSOURCE/env.sh"
+
+export POGB_VERSIONINFO__RENAWRE="$(git --git-dir="${RENAWRE_ROOT}/.git" describe --tags --long 2>/dev/null || echo unknown)"
+
 export POGB_ROOTLIST="$RENAWRE_ROOT/tmpl:${POGB_ROOTLIST-}"
 export POGB_BUILDLIST="$RENAWRE_ROOT/src:${POGB_BUILDLIST-}"
 export POGB_RUNMAKELIST="$RENAWRE_ROOT/helper/recipe.mk:${POGB_RUNMAKELIST-}"
