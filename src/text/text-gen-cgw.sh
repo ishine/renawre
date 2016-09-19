@@ -49,7 +49,7 @@ runjobs JOB=1:$nj $out/logs/cgw.JOB.log <<EOF
 while IFS=\$'\n' read -r fname; do
   gunzip -vc \$fname \
   | node !.rtools/corpus-cgw-story.js ;
-done < <(xargs -n10 < $tmpdir/flist.JOB) \
+done < $tmpdir/flist.JOB \
   ${cmd_opencc} \
   | $(out::getOutputFilter) \
   | gzip -nc9 > $tmpdir/text.out.JOB.gz
