@@ -26,15 +26,3 @@ function POGDef::text::init {
   $this::addElem table t
   printf -v "objVar[${this}.defaultElem]" t
 }
-
-# Texts should not have duplicated keys, unlike general table
-function POGDef::text::postCheck {
-  local this="$1"
-  POGDef::data::postCheck "$this"
-
-  if ! $this::get | awk '/^ / {print "Disallowed comment line: " $0; exit 1} $1 in a {print "duplicated key: " $1; exit 1} 1 {a[$1]=1}'; then
-    printError "Problems detected, there maybe something wrong in main script"
-    return 1
-  fi
-  return 0
-}
