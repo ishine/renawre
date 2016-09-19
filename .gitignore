@@ -1,4 +1,4 @@
 build/
-rtools/*.js
+tmpl/rtools/*.js
 node_modules/
 npm-debug.log
