@@ -43,19 +43,15 @@ echo " - Extracting text..."
 watchProgress $(cat "$tmpdir/flist_all" | wc -l) <<EOF
 cat $out/logs/cgw.{1..$nj}.log | grep '\.gz:.*%\$' | wc -l
 EOF
-# Kind of dirty optimization...
-# feed 10 files at once so we don't have to restart node.js that often
+# While loop: restart node to prevent mem explode
 runjobs JOB=1:$nj $out/logs/cgw.JOB.log <<EOF
 while IFS=\$'\n' read -r fname; do
   gunzip -vc \$fname \
   | node !.rtools/corpus-cgw-story.js ;
 done < $tmpdir/flist.JOB \
   ${cmd_opencc} \
-  | $(out::getOutputFilter) \
-  | gzip -nc9 > $tmpdir/text.out.JOB.gz
+  | $(out::getSink $tmpdir/text.out.JOB.gz)
 EOF
 
 echo " - Combining..."
-# EVIL: Use manual approach to merge, or it's too slow
-#mergeData $nj "$tmpdir/text.out" | out::sink
 mergeData $nj "$tmpdir/text.out.%d.gz" 0 > $out/t.gz

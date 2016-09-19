@@ -36,6 +36,11 @@ function trans:stripTags {
   sed -r 's/ \{[^}]+}//g; s/ <[^>]+>//g'
 }
 
+# Strip comments
+function trans:stripComments {
+  sed -r 's/ \([^\)]+\)//g; s/ （[^）]+）//g'
+}
+
 # Strip all symbols and punctuations
 function trans:stripPunctuations {
   perl -CSAD -lane '$F[$_] =~ s/\p{P}|\p{C}|\p{S}|\p{M}//g for (1..$#F);
