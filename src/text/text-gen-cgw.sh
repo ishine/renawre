@@ -20,8 +20,6 @@ corpora= !!a:h
 setname= !!a # afp, cna, cns, gmw, pda, pla, xin, zbn
 out= !!text:o:c
 
-to_resort=0 # Whether to re-sort after parallel processing
-
 !@beginscript
 
 # Find out the actual path of target and check it
@@ -45,12 +43,19 @@ echo " - Extracting text..."
 watchProgress $(cat "$tmpdir/flist_all" | wc -l) <<EOF
 cat $out/logs/cgw.{1..$nj}.log | grep '\.gz:.*%\$' | wc -l
 EOF
+# Kind of dirty optimization...
+# feed 10 files at once so we don't have to restart node.js that often
 runjobs JOB=1:$nj $out/logs/cgw.JOB.log <<EOF
-cat $tmpdir/flist.JOB \
-  | xargs gunzip -vc \
-  | node !.rtools/corpus-cgw-story.js \
-  ${cmd_opencc} > $tmpdir/text.out.JOB
+while IFS=\$'\n' read -r fname; do
+  gunzip -vc \$fname \
+  | node !.rtools/corpus-cgw-story.js ;
+done < <(xargs -n10 < $tmpdir/flist.JOB) \
+  ${cmd_opencc} \
+  | $(out::getOutputFilter) \
+  | gzip -nc9 > $tmpdir/text.out.JOB.gz
 EOF
 
-echo " - Sorting..."
-mergeData $nj "$tmpdir/text.out" | out::sink
+echo " - Combining..."
+# EVIL: Use manual approach to merge, or it's too slow
+#mergeData $nj "$tmpdir/text.out" | out::sink
+mergeData $nj "$tmpdir/text.out.%d.gz" 0 > $out/t.gz
