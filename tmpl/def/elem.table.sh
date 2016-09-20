@@ -26,7 +26,7 @@ function POGElem::table::init {
   local nameElem="${this#*\%}"
   local dir="${!nameObj}"
 
-  printf -v "objVar[${this}.outFilter]" '%s' "sed -r 's/ +\$//; s/\s+/ /g;'"
+  printf -v "objVar[${this}.outFilter]" '%s' "sed -r 's/ +\$//; s/\s{2,}/ /g;'"
   printf -v "objVar[${this}.sink]" "gzip -nc9 > '!@'"
   printf -v "objVar[${this}.get]" "if [[ -x '%s' ]]; then bash '%s' table; else gunzip -c '%s'; fi" \
     "${dir}/${nameElem}.sh" "${dir}/${nameElem}.sh" \
