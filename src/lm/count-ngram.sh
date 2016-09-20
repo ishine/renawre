@@ -142,4 +142,4 @@ done
 
 echo " - Finalizing and generating features"
 estimate-ngram -verbose 2 -c $tmpdir/merged_count \
-  -wc $out/t.gz
+  -o $order -wc $out/t.gz
