@@ -38,7 +38,7 @@ function trans:stripTags {
 
 # Strip comments
 function trans:stripComments {
-  sed -r 's/ \([^\)]+\)//g; s/ （[^）]+）//g'
+  sed -r 's/\([^\)]+\)//g; s/（[^）]+）//g'
 }
 
 # Strip all symbols and punctuations
