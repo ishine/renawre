@@ -18,28 +18,31 @@
 
 set -euo pipefail
 
-export RENAWRE_ROOT="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
+if [[ -z "${RENAWRE_ROOT-}" ]]; then
+  export RENAWRE_ROOT="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
-if [[ -f "$RENAWRE_ROOT/local.sh" ]]; then
-  source "$RENAWRE_ROOT/local.sh"
-fi
-
-# Attempt to find POG if not specified
-if [[ ! -n "${POGB_POGSOURCE-}" ]]; then
-  if [[ -f "$RENAWRE_ROOT/../probable-octo-guacamole/env.sh" ]]; then
-    POGB_POGSOURCE="$RENAWRE_ROOT/../probable-octo-guacamole"
-  elif [[ -f "$HOME/probable-octo-guacamole/env.sh" ]]; then
-    POGB_POGSOURCE="$HOME/probable-octo-guacamole"
-  else
-    echo 'Error: cannot find POG' 1>&2
-    exit 2
+  if [[ -f "$RENAWRE_ROOT/local.sh" ]]; then
+    source "$RENAWRE_ROOT/local.sh"
   fi
-fi
-source "$POGB_POGSOURCE/env.sh"
 
-export POGB_VERSIONINFO__RENAWRE="$(git --git-dir="${RENAWRE_ROOT}/.git" describe --tags --long 2>/dev/null || echo unknown)"
+  # Attempt to find POG if not specified
+  if [[ ! -n "${_tofindPOG-}" ]]; then
+    if [[ -f "$RENAWRE_ROOT/../probable-octo-guacamole/env.sh" ]]; then
+      _tofindPOG="$RENAWRE_ROOT/../probable-octo-guacamole"
+    elif [[ -f "$HOME/probable-octo-guacamole/env.sh" ]]; then
+      _tofindPOG="$HOME/probable-octo-guacamole"
+    else
+      echo 'Error: cannot find POG' 1>&2
+      exit 2
+    fi
+  fi
+  source "$_tofindPOG/env.sh"
 
-export POGB_ROOTLIST="$RENAWRE_ROOT/tmpl:${POGB_ROOTLIST-}"
-export POGB_BUILDLIST="$RENAWRE_ROOT/src:${POGB_BUILDLIST-}"
-export POGB_RUNMAKELIST="$RENAWRE_ROOT/helper/recipe.mk:${POGB_RUNMAKELIST-}"
-export POGB_BUILDMAKELIST="$RENAWRE_ROOT/helper/script.mk:${POGB_BUILDMAKELIST-}"
+  export POGB_VERSIONINFO__RENAWRE="$(git --git-dir="${RENAWRE_ROOT}/.git" describe --tags --long 2>/dev/null || echo unknown)"
+
+  export POGB_ROOTLIST="$RENAWRE_ROOT/tmpl:${POGB_ROOTLIST-}"
+  export POGB_BUILDLIST="$RENAWRE_ROOT/src:${POGB_BUILDLIST-}"
+  export POGB_RUNMAKELIST="$RENAWRE_ROOT/helper/recipe.mk:${POGB_RUNMAKELIST-}"
+  export POGB_BUILDMAKELIST="$RENAWRE_ROOT/helper/script.mk:${POGB_BUILDMAKELIST-}"
+
+fi # end if not defined yet
