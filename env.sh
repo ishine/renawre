@@ -18,7 +18,8 @@
 
 set -euo pipefail
 
-if [[ -z "${RENAWRE_ROOT-}" ]]; then
+if [[ -z "${POGB_ISINCLUDED_RENAWREENV-}" ]]; then
+  export POGB_ISINCLUDED_RENAWREENV=1
   export RENAWRE_ROOT="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
   if [[ -f "$RENAWRE_ROOT/local.sh" ]]; then
@@ -26,17 +27,17 @@ if [[ -z "${RENAWRE_ROOT-}" ]]; then
   fi
 
   # Attempt to find POG if not specified
-  if [[ ! -n "${_tofindPOG-}" ]]; then
+  if [[ ! -n "${POGB_POGSOURCE-}" ]]; then
     if [[ -f "$RENAWRE_ROOT/../probable-octo-guacamole/env.sh" ]]; then
-      _tofindPOG="$RENAWRE_ROOT/../probable-octo-guacamole"
+      POGB_POGSOURCE="$RENAWRE_ROOT/../probable-octo-guacamole"
     elif [[ -f "$HOME/probable-octo-guacamole/env.sh" ]]; then
-      _tofindPOG="$HOME/probable-octo-guacamole"
+      POGB_POGSOURCE="$HOME/probable-octo-guacamole"
     else
       echo 'Error: cannot find POG' 1>&2
       exit 2
     fi
   fi
-  source "$_tofindPOG/env.sh"
+  source "$POGB_POGSOURCE/env.sh"
 
   export POGB_VERSIONINFO__RENAWRE="$(git --git-dir="${RENAWRE_ROOT}/.git" describe --tags --long 2>/dev/null || echo unknown)"
 
