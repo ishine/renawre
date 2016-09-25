@@ -39,11 +39,5 @@ if [[ -z "${POGB_ISINCLUDED_RENAWREENV-}" ]]; then
   fi
   source "$POGB_POGSOURCE/env.sh"
 
-  export POGB_VERSIONINFO__RENAWRE="$(git --git-dir="${RENAWRE_ROOT}/.git" describe --tags --long 2>/dev/null || echo unknown)"
-
-  export POGB_ROOTLIST="$RENAWRE_ROOT/tmpl:${POGB_ROOTLIST-}"
-  export POGB_BUILDLIST="$RENAWRE_ROOT/src:${POGB_BUILDLIST-}"
-  export POGB_RUNMAKELIST="$RENAWRE_ROOT/helper/recipe.mk:${POGB_RUNMAKELIST-}"
-  export POGB_BUILDMAKELIST="$RENAWRE_ROOT/helper/script.mk:${POGB_BUILDMAKELIST-}"
-
+  addRoot RENAWRE "${RENAWRE_ROOT}"
 fi # end if not defined yet
